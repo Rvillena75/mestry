@@ -1,0 +1,3 @@
+#!/data/data/com.termux/files/usr/bin/sh
+# Proposed EXP07 Boot hook: SSH only, expected port explicit.
+exec /data/data/com.termux/files/home/bin/mestry-ssh-start 8023

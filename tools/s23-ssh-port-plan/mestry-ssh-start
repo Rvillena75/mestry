@@ -1,0 +1,49 @@
+#!/data/data/com.termux/files/usr/bin/sh
+# Proposed replacement; not deployed before explicit approval.
+set -eu
+umask 077
+mestry_prefix=/data/data/com.termux/files/usr
+export PATH="$mestry_prefix/bin:/system/bin"
+mestry_expected_port=${1:-8023}
+case "$mestry_expected_port" in 8023) ;; *) echo 'Expected port must be 8023' >&2; exit 2;; esac
+mestry_state="$HOME/.local/state/mestry"
+mkdir -p "$mestry_state"
+exec 9>"$mestry_state/ssh-start.lock"
+flock -n 9 || exit 0
+"$mestry_prefix/bin/sshd" -t
+mestry_policy=$("$mestry_prefix/bin/sshd" -T)
+mestry_ports=$(printf '%s\n' "$mestry_policy" | awk 'tolower($1)=="port" {print $2}')
+[ "$mestry_ports" = "$mestry_expected_port" ] || { echo 'Configured port differs from Boot expectation' >&2; exit 1; }
+"$mestry_prefix/bin/termux-wake-lock"
+mestry_pidfile="$mestry_prefix/var/run/sshd.pid"
+mestry_pid=''
+if [ -r "$mestry_pidfile" ]; then mestry_pid=$(cat "$mestry_pidfile"); fi
+mestry_running=no
+case "$mestry_pid" in
+  ''|*[!0-9]*) ;;
+  *) if kill -0 "$mestry_pid" 2>/dev/null && [ "$(cat "/proc/$mestry_pid/comm" 2>/dev/null)" = sshd ]; then
+       mestry_running=yes
+     fi ;;
+esac
+if [ "$mestry_running" = no ]; then
+  "$mestry_prefix/bin/sshd" 9>&-
+fi
+# Verify the port and this server's public identity, not just a live PID.
+mestry_local_fp=$(ssh-keygen -E sha256 -lf "$mestry_prefix/etc/ssh/ssh_host_ed25519_key.pub" | awk '{print $2}')
+mestry_attempt=0
+while [ "$mestry_attempt" -lt 3 ]; do
+  mestry_scan=$(ssh-keyscan -T 2 -p "$mestry_expected_port" -t ed25519 127.0.0.1 2>/dev/null) || mestry_scan=''
+  if [ -n "$mestry_scan" ]; then
+    mestry_remote_fp=$(printf '%s\n' "$mestry_scan" | ssh-keygen -E sha256 -lf - | awk '{print $2}')
+    if [ "$mestry_remote_fp" = "$mestry_local_fp" ]; then
+      printf 'ready pid=%s port=%s\n' "$(cat "$mestry_pidfile")" "$mestry_expected_port" > "$mestry_state/ssh-start.status"
+      cat "$mestry_state/ssh-start.status"
+      exit 0
+    fi
+  fi
+  mestry_attempt=$((mestry_attempt + 1))
+  sleep 1
+done
+printf 'not-ready expected-port=%s; inspect before restarting\n' "$mestry_expected_port" > "$mestry_state/ssh-start.status"
+cat "$mestry_state/ssh-start.status" >&2
+exit 1

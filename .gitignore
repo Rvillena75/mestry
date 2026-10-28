@@ -1,0 +1,56 @@
+# Credenciales y estado privado por entorno
+.env
+.env.*
+!.env.example
+.ssh/
+.codex/auth.json
+.codex/sessions/
+.codex/state*
+.codex/log/
+.codex/history.jsonl
+.codex/shell_snapshots/
+.codex-account-*/
+auth.json
+hosts.yml
+credentials*.json
+client_secret*.json
+token*.json
+*.pem
+*.key
+*.p12
+*.jks
+*.keystore
+id_rsa*
+id_ed25519*
+
+# Dependencias, caches y compilaciones locales
+node_modules/
+.venv/
+venv/
+venvs/
+__pypackages__/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.gradle/
+build/
+dist/
+local.properties
+*.apk
+*.aab
+*.sqlite*
+*.db
+*.log
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
+*:Zone.Identifier
+
+# Evidencia bruta local: conservar solo documentación Markdown revisada.
+# Los originales completos permanecen en el directorio histórico.
+/docs/validation/**
+!/docs/validation/**/
+!/docs/validation/**/*.md

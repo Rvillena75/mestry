@@ -1,0 +1,284 @@
+{
+  "upstream_commit": "538d65f67e34907789237fc71f56e8ca95d9f3cb",
+  "upstream_archive_sha256": "ff8d68e74d4045268a80dde2d9e55f6e131825ee14ddac2a2e5b4dd40dff501e",
+  "patch_sha256": "342b44089b8ce39876b4b4f723fb480bbaf4c93825da8bf5995d84facff8401b",
+  "changed_text_files": {
+    "android/app/build.gradle.kts": {
+      "before_sha256": "3056404ce38f18f27f5597135f86e74352eb99f2b096737f2359f4333bfea465",
+      "after_sha256": "77382d779abe3f0068992ec663da9c3d07f3b85166dfae5f640ff57875ab69ef"
+    },
+    "android/app/src/main/AndroidManifest.xml": {
+      "before_sha256": "53e698c123004fb1e072d0ac58d4fafcedc6d7c4250e042ea95f1e38a01b7760",
+      "after_sha256": "7a0af6990ef39a4261a48cc9d6a12aa54a3fda6de04296f330eefca14f352461"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/AppUiModels.kt": {
+      "before_sha256": "a6d942f1661ac17bd64ae4e64b5990ce35442c556bbe74f3cba1c6c559ff5ab3",
+      "after_sha256": "46447ec9d7bc5672462b8b675a6f1c4690623e11c4900f71051916797cae04cd"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/AppUtilities.kt": {
+      "before_sha256": "363984476e9f1f17e9b302e49004cee556fb57bbabe9209b3f1f39416efe432c",
+      "after_sha256": "d9042b83d0365b3e8efa5e0dbe9f63229377956914983395daa00851c56c6632"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/BridgeClient.java": {
+      "before_sha256": "6e46a1b8f55244c78f15f4934367a774c13de46df66dfc971cc7682ae16a3ddb",
+      "after_sha256": "7366bea2c79288d5082f9fe706902e16e02625d4a96d1dbd191810594e53120c"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/BridgeHistoryEntry.kt": {
+      "before_sha256": "a7fb3141c7333ad00fb352e2d0439a4f527cfa66aefaa4b97804da62a70114f0",
+      "after_sha256": "16b7017f7611be93a9c53b4184cebfd18c0f58970e147c17cc882a5d4ab94404"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/BridgeTokenVault.java": {
+      "before_sha256": null,
+      "after_sha256": "efe461a5f0971cb75172fb690b33c7ef04bc061b19ffe968003c0103802fecd8"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/BridgeTransport.java": {
+      "before_sha256": null,
+      "after_sha256": "e9d13b835924ae44ea8411c587b9d15b4c6ad4ab4670db81aaaddd24445fb7b0"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/ChatComposerImages.kt": {
+      "before_sha256": "1875a63ea8672f5a140a0159d5a4c5f5125e4c43be8b11dd0ded9589743ec1f2",
+      "after_sha256": "1b36e4d106bbd906ba5de9a45c0a7754307d13b700feadf6fd3aa686f6bd1dee"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/ChatInputSettings.kt": {
+      "before_sha256": "4399ff938d8f1c405a504e70cf7f332f4b4c4829e228d95661268c7c348aaa16",
+      "after_sha256": "ca75ba6bf362d1cd1eb76605a479eb98fe33bc6de729777a9b5fe9e292edb5a3"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/ChatPage.kt": {
+      "before_sha256": "8b2d6eae6c88cb650effe5839c8a076d51ae0a75539be948874a74da7c23409d",
+      "after_sha256": "a74369ab40d36b54379abbd73167304079dda3e22985203b70ae2594866a9c9d"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/CodeBrowserFilePreview.kt": {
+      "before_sha256": "ff7cb47d04c5d4c21ce666a75921c9a43be7a83f05a30ac17da70f28675b8ce7",
+      "after_sha256": "6ec538cc2e9076a3b1205faa91f658a63058cfb649ffeb38ba55190f8d1186da"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/CodeBrowserModels.kt": {
+      "before_sha256": "341e3451ec022663151c6f898c2fe2be115b5f9a5f6d41f76d356cdd3a1dfb72",
+      "after_sha256": "cb0af15f36036d503bbd641358a1ce4bac09143a748ab6ddf9a2982619a7dc61"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/CodeBrowserPage.kt": {
+      "before_sha256": "6451750950e92bec1a1d71c679ea7fcb6ef9ab442603983bdfa4fadc6ba552c3",
+      "after_sha256": "e5b2128c56fc1a31d56ac31788702f08166933eaefadc36f79185119b1b8d64a"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/CodexSessionModels.kt": {
+      "before_sha256": "226203754c7fe0428f76098580d350cafb041dbb337180b7d9c3ac5c51eada43",
+      "after_sha256": "f1c1cadf2b13abbd44eb3070a8dfcc5f5f5c271deab9232e2d1a22b6d37b0a94"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/ConnectionPage.kt": {
+      "before_sha256": "f813b27bba083c7bc7ac6dcc7681b891b7412416d478440e2fb189ecd65334a0",
+      "after_sha256": "f861a0382572757dbbf3831f9e584b361d7490bd000e626662536602d689834f"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/ConversationActivityHtml.kt": {
+      "before_sha256": null,
+      "after_sha256": "9a10d1ec453cc70cf96e006064f010bfe21bbf174944daa67c4f9468b7e5f334"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/ConversationHistoryAssets.kt": {
+      "before_sha256": "d4aa9911a18d6b53a1817ed3802cf1a5128c8a3e73689b0869036fc6d70b87fd",
+      "after_sha256": "c4c27cf24e1f0ddc51d3299519dfbca96857d6e83ed1ce6b258c529aa4023e1a"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/ConversationHistoryHtml.kt": {
+      "before_sha256": "6cedf10a5ebe90cfde44b506f13e52ecd6a012d8909579933c60c9cabaee21c1",
+      "after_sha256": "6d4d4e9727c206630d5c608a29bdd2d1326fb705b3772606bcd1fd5f336d252b"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/ConversationHistoryWebView.kt": {
+      "before_sha256": "75065059b34db061200f04c9f65372ad8ffed34827ac3fc013b14458dccfe100",
+      "after_sha256": "d747b699a322e64a825388c111e0cb5b03a4ca13b35174243756f8f25926383f"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/ConversationImageUi.kt": {
+      "before_sha256": "b2384d6fa8919d66311767ae04a1264321cd2f17f87a12ef91dd1ff63447230e",
+      "after_sha256": "686225cf2be81d3eca020fc9a0a70200686226ee3c6eee6d3d27e4f1627593e5"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/ConversationModels.kt": {
+      "before_sha256": "56e1f49273c1091f666e1d38de1e363d4dcd683fe70b19448c6720c1873b6eea",
+      "after_sha256": "b31ec3cb7fa3c9d285b9c64703d5396ed652f9e1c84d462476b2871519eaab89"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/DriveBrowserDialog.kt": {
+      "before_sha256": null,
+      "after_sha256": "6ddfb359dc843b97808ba28ec712e9093fb8e16a3a6a41394262deece82fcab0"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/DriveBrowserModels.kt": {
+      "before_sha256": null,
+      "after_sha256": "0801737b38b90e70a16634bbd099770aaceb0f32384062b13c9fef0cd2b9a2a3"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MainActivity.kt": {
+      "before_sha256": "f2f72cbfdd058993763b6693cd1f26929bc9adfc64fc6f88e0b489a2dd1998a7",
+      "after_sha256": "4acdec5a9bd69042423d08c32b4148d8504183ca62a9db86aa2f21d2a434484d"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MainActivityApprovalController.kt": {
+      "before_sha256": "8dd75d27c295bb9043e34aa695d0fda2b395b3dae46d4c90b5f362cb73b30a20",
+      "after_sha256": "57c860144b63f24ee66b64ffc861aa7f57a0d1d94049e5f8f1a48371c8908ede"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MainActivityBackupController.kt": {
+      "before_sha256": "e12bc76303ddf599949428222644a4f4b0a34043a528921f1cb809bd6e60f65e",
+      "after_sha256": "bf8935a32ad99811d8c0ebb9cedbde286fcddd161e49d4ae83d2a102beb3f04d"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MainActivityBridgeController.kt": {
+      "before_sha256": "7af875fcf1ac6466a6e7b02ed5fa60c163c36ba4217d00c3c2304e4fd60567c4",
+      "after_sha256": "a75606375a1706f783a2237b6cf29db2e0dc8f773b0fd3cd5ff4ece71727d0c8"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MainActivityChatSettingsController.kt": {
+      "before_sha256": "6c85ce3c8d550ca69a3466a6d50af87f81bf1d43e79702bbc56a6dbdc3266679",
+      "after_sha256": "e2f285ac1a3ed0cc288dab157600f3aa41355374673d04235ef341c6798fa895"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MainActivityCodeBrowserController.kt": {
+      "before_sha256": "a57b1c1a1dd5fd2371b03e8a98e6830acfd58aed76af87314e47531717fe5cea",
+      "after_sha256": "8e4f7f23cbe19cd1d022f5050388ad9509ae52ce69c5841f16b0ef9a458a597c"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MainActivityComposerImageController.kt": {
+      "before_sha256": "0ea5746017ac79ab2363c1810ff87bb1fdc49bb8dec2dc8585886dfe235a1f49",
+      "after_sha256": "c8ae117411893a163e0e9034060d460521765e97e7a52cae255e98e2240eca13"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MainActivityConversationController.kt": {
+      "before_sha256": "791e04386ede8d42a5b42f10db7dcb3b18a7e26a22d94eae9017637a2c00900b",
+      "after_sha256": "55f62c2a78427f495a0f9147a499ced6dcbde308e4cf61b673a303e43fcb944a"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MainActivityDrawer.kt": {
+      "before_sha256": "1e8711faede06e08e7fa1a15f3b1b25515b670c240d3a221095fb5284dccf281",
+      "after_sha256": "2576e31224fb97de36bb09e12f242f42674885eaf49cc549e8075262f86ff320"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MainActivityDriveController.kt": {
+      "before_sha256": null,
+      "after_sha256": "45a4f146e354411569e21751c8d5ad7b760651abd487ad95f8bb080b781e5dab"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MainActivityFileChangeController.kt": {
+      "before_sha256": "20bb1b1c97341f9f216daf8fe69e3f05f8294e93aa51b787f88aa2ca44676759",
+      "after_sha256": "f314e00ee8177cf0a3d385c9af8ed38378511f17159528331cd8559c3ac0e453"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MainActivityImageController.kt": {
+      "before_sha256": "53f24c11622fc47734817dae16688db3d81752bc2475e27f127e95e793c5def1",
+      "after_sha256": "eaba77e3210ecf9ff30bc95f7793243897ee5b2e91b9a3ee9ba993e03ca4a97f"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MainActivityNotificationController.kt": {
+      "before_sha256": "6633b0bb32d0be47a9ad025ecdb8f49bde413b60f1f1c47b7b2c531aad75c43f",
+      "after_sha256": "3303f7181c9462c064b9070aac5df1e1e6c3a844ead4bf8c634e3154ddfae559"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MainActivityPresentation.kt": {
+      "before_sha256": "d7e3241c659c1c6d75aa4411cc86776bc93aa5f7b09add1a4f9301028bd3f75d",
+      "after_sha256": "2713e1b68edc3fa147987c358d4778eefef112a39d5faa1850915ae3174033bd"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MainActivityProjectDirectoryController.kt": {
+      "before_sha256": "f06907f5b9e23d7810d8b7366e715adc51971dae7f840bd8c9405066da608d0c",
+      "after_sha256": "a3d9f72e8680e4024cfacdfc0d52faca62e54ec4b90a76ca8f28b80fcdd52904"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MainActivityProtocolController.kt": {
+      "before_sha256": "b2250325f640080722c163275a612624ffcfa57d0c6d243e00d8408206ed6778",
+      "after_sha256": "24c6d1375be1928a6d1c1313be49431f43b00f259310cf41281e67366078de22"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MainActivitySessionCacheController.kt": {
+      "before_sha256": "2ff7e7b0ae237666fd6ff1980a03066ea95d12e58f8620bf0d70ce0ebb06b68c",
+      "after_sha256": "29ec9b0be334967f7a3523ffba4b1c397c184172ab5826eb16d8259d92d6fce5"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MainActivitySessionController.kt": {
+      "before_sha256": "6becbee37ae724c2e8ee7fa3208622a1aabd2df02d6fdbee56c6ec81d9260247",
+      "after_sha256": "7bf0f3af386cf10d05f3c8320a64a4cbef26a5e3f6197135b5280513f0ee3577"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MainActivitySettingsController.kt": {
+      "before_sha256": "a4df229faeec39144a8e717829e5103f749f2fdf77670294a28d1a386454729b",
+      "after_sha256": "4f8fd32a4fbef0fc8a0de27d634b4e17757ba4b259751919049eb9b529f94d67"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MainActivitySnapshotController.kt": {
+      "before_sha256": "fc7fa511a4482ae06ecf687ef4f6f53ae13ad81b8864d86e87e5a8dcc8ae9425",
+      "after_sha256": "1075d234a014050c51cd393774d04502922c46d2effe4a1343ba251e914bbc87"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MainActivityThreadItemController.kt": {
+      "before_sha256": "bff7d042a60ac92059f05dfbe255c708e10b19086d52dc5a2d77633acfbdf5dd",
+      "after_sha256": "cbaba0267921b2ded5dbb33666c642a4a9c4e07dd5a61fd6d0a706342898210f"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MainActivityUi.kt": {
+      "before_sha256": "3d8af1fb43ec20ff74e27ac475a1aaf8947b1b16550ed21769fcccaf20ef105b",
+      "after_sha256": "50bca751d55690f1c250fccc32f955b85767e3437728e6d1c3768bb253bc961b"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MainActivityVpnController.kt": {
+      "before_sha256": null,
+      "after_sha256": "cab512c17d8c78f17812352f6bd256cf8c5c146791f0b6af1c6f13d68a20d6e1"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/MestryVpnService.java": {
+      "before_sha256": null,
+      "after_sha256": "011731ca4cd4651ac8fa546dfc5009637b255022573587f6857866846e6359ca"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/PairingKeyField.kt": {
+      "before_sha256": null,
+      "after_sha256": "e7f24b7d4b2af433dd5ec43c0964495b0d62fdbf35f5cadfaa9b55883641625b"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/ProjectDirectoryPage.kt": {
+      "before_sha256": "ed03418c1a3fcef967e94ac0fa034bd27153120bd8bce64accb8fd7c6029502b",
+      "after_sha256": "1925f4aea6be64b0bd59c08e030acc297293304d325a1c147199cfd820119a4a"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/SessionComponents.kt": {
+      "before_sha256": "ad7d1b7ee3d472e727021616242f2716e63284c331c79da5405baeefbbe6690c",
+      "after_sha256": "a4343d7f6cd00a9228de7222569bc736a794178b1d98bb9d60f3c742cb81aa97"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/SettingsPage.kt": {
+      "before_sha256": "2644ee016d2474aff2a4c3891400a303f6453ed79f4f2fbb2e7ac26b19f9228d",
+      "after_sha256": "ba44a56a226e9cf529a26e3570ac869cf90772482c09dccf0e5cd469a3455d59"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/VpnLeasePolicy.java": {
+      "before_sha256": null,
+      "after_sha256": "20cd25d8b3e9d0c03b199b440d4b295696f9aa0f0b08b6100e71b9739ace9acb"
+    },
+    "android/app/src/main/java/com/haochen/codexremote/VpnTurnTracker.java": {
+      "before_sha256": null,
+      "after_sha256": "16e97ad37466a9426a25ec8a64c9c8e4290e1dda54275f8fbfd541bc60a3adc7"
+    },
+    "android/app/src/main/res/values/strings.xml": {
+      "before_sha256": "b14d407b038ae8d85063ef61f940248db302bfb30dc43865b04ff1e054298d2c",
+      "after_sha256": "33b16f6cabb45bb8215c6784a4e68f65f8f0c22602bd9d91c253876bcae8d03f"
+    },
+    "android/gradle/wrapper/gradle-wrapper.properties": {
+      "before_sha256": "1d8a666dacd034c5fef136584846c9424e56d64d43402efc9f5867bc0c0fba2f",
+      "after_sha256": "9363fbfab219db23f6bf2b09ae6916dc136c2168a0ed47664a5f3e67e0075c5e"
+    },
+    "src/backends/codex.mjs": {
+      "before_sha256": "979ab6a599c866f680c15839ac90f48a9c0254f648f77209f1f68396bc796dfa",
+      "after_sha256": "985f5594191fba46b0037e0a25844a2484bee3e8f7ee8a3856784eccd29e5a6e"
+    },
+    "src/bridge-server.mjs": {
+      "before_sha256": "092a78a4ccfb5634fd99fd41581e7e8b584ca4eda8680c38f973198e8eb90785",
+      "after_sha256": "5856dc8d37479a81a1e4ed26e1f9c724c90974c6a4373c2ca731a544a34acde3"
+    },
+    "src/bridge/session-normalization.mjs": {
+      "before_sha256": "aa813228a663b075d2177aca9ac5f922725d126e4be18d86e5b317a8fe831596",
+      "after_sha256": "c84e80ed9cd7a6c8cb4d32ac96d4f932b06a39d64088191074ee5a5e71ea27e7"
+    },
+    "src/bridge/turn-content-builder.mjs": {
+      "before_sha256": "f70305972a7cb7cf6ac6fc2afd76dfa9a67f667a1e2119d55c3a073f7d7ad23c",
+      "after_sha256": "bb36ad32c925dba88a8ea992e0813e2acf4c9cd2b17a3b6f4f2abc26b3382bdb"
+    },
+    "src/mestry-drive-client.py": {
+      "before_sha256": null,
+      "after_sha256": "f7504e5b262ea3d9051876f9f31d990c6ccc63624b8b74d745fc90ea8614b1f0"
+    },
+    "src/mestry-drive.mjs": {
+      "before_sha256": null,
+      "after_sha256": "14631c4d850b4c9ddf9f8bb6aa3f91925aa80d2a5caeecc7bff103269f960e84"
+    },
+    "src/mestry-entry.mjs": {
+      "before_sha256": null,
+      "after_sha256": "82e852e039a766e652bd0688970eae9411622695d90cd4344da57c7c0cde4997"
+    },
+    "src/mestry-policy.mjs": {
+      "before_sha256": null,
+      "after_sha256": "ec56ec35842f1ec85a0efc4a785cc23da42efad2a143bd0478cf7664d961e8e7"
+    },
+    "test/mestry-drive.test.mjs": {
+      "before_sha256": null,
+      "after_sha256": "4d866f9c68a4412752c28946207b324566f134e13cfaaefe2bf918f8ea9f3b51"
+    },
+    "test/mestry-pilot-handshake.test.mjs": {
+      "before_sha256": null,
+      "after_sha256": "00353e9aaf7c78b014dee54a88dd0ce83c997b5a7f34fcccb48b897258133caf"
+    },
+    "test/mestry-pilot-integration.test.mjs": {
+      "before_sha256": null,
+      "after_sha256": "ad581ab44e6ac9e1350326f087630b17ef53532a76d34db93fcad9ca6748cc3c"
+    },
+    "test/mock-backend.test.mjs": {
+      "before_sha256": "3c41a9e76e0dcc72b28d4fce3a031aef0d608fdad4164d6f3c53fa428391cd17",
+      "after_sha256": "bff0f6d3068da3f1a27dad3d85c17a2f45e39f52063243be9efdd88fababc358"
+    }
+  },
+  "wrapper_jar": {
+    "path": "android/gradle/wrapper/gradle-wrapper.jar",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/v8.13.0/gradle/wrapper/gradle-wrapper.jar",
+    "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f"
+  }
+}

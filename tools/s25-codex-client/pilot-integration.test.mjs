@@ -1,0 +1,80 @@
+// Network fixtures only: no Codex login, inference or phone connection.
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import os from 'node:os';
+import { once } from 'node:events';
+import WebSocket from 'ws';
+import { BridgeServer } from '../src/bridge-server.mjs';
+import { StateStore } from '../src/store.mjs';
+import { MockBackend } from '../src/backends/mock.mjs';
+
+test('pilot authenticates HTTP and WS, filters projects and rejects escaped files and forged approvals', async (t) => {
+  const temp = await fs.mkdtemp(path.join(os.tmpdir(), 'mestry-bridge-'));
+  const project = path.join(temp, 'project');
+  const foreign = path.join(temp, 'other-project');
+  await fs.mkdir(project); await fs.mkdir(foreign);
+  await fs.writeFile(path.join(project, 'readme.txt'), 'allowed fixture');
+  await fs.writeFile(path.join(foreign, 'private.txt'), 'outside fixture');
+  await fs.symlink(foreign, path.join(project, 'escape'));
+  const backend = new MockBackend();
+  const own = await backend.startThread({ cwd: project });
+  const outside = await backend.startThread({ cwd: foreign });
+  const token = 'synthetic_fixture_never_used_for_pairing_'.padEnd(48, 'x');
+  const headers = { 'X-Bridge-Token': token };
+  const store = new StateStore(path.join(temp, 'state.json'));
+  const bridge = new BridgeServer({ backend, store, host: '127.0.0.1', port: 0, token, pilotProject: project });
+  await bridge.start();
+  const base = `http://127.0.0.1:${bridge.address().port}`;
+  let ws;
+  t.after(async () => { ws?.terminate(); await bridge.stop(); await fs.rm(temp, { recursive: true, force: true }); });
+  assert.equal((await fetch(base + '/v1/sessions')).status, 401);
+  assert.equal((await fetch(base + '/v1/sessions?token=' + token)).status, 401);
+  assert.equal((await fetch(base + '/v1/sessions?token=' + token, { headers })).status, 401);
+  assert.equal((await fetch(base + '/v1/sessions', { headers: { ...headers, Origin: 'https://outside.invalid' } })).status, 401);
+  assert.equal((await fetch(base + '/v1/image', { headers })).status, 403);
+  assert.equal((await fetch(base + '/v1/file', { headers })).status, 403);
+  const denied = new WebSocket(base.replace('http:', 'ws:') + '/?token=' + token);
+  const deniedError = once(denied, 'error');
+  assert.match(String((await deniedError)[0]), /401/);
+  ws = new WebSocket(base.replace('http:', 'ws:') + '/', { headers });
+  const received = [];
+  ws.on('message', (value) => received.push(JSON.parse(value.toString())));
+  await once(ws, 'open');
+  let counter = 0;
+  async function request(type, payload = {}) {
+    const id = `fixture-${++counter}`;
+    ws.send(JSON.stringify({ id, type, payload }));
+    const deadline = Date.now() + 2500;
+    while (Date.now() < deadline) {
+      const response = received.find((message) => message.id === id);
+      if (response) return response;
+      await new Promise((resolve) => setTimeout(resolve, 10));
+    }
+    throw new Error('Fixture response timeout');
+  }
+  const listed = await request('session.list');
+  assert.equal(listed.ok, true);
+  assert.deepEqual(listed.payload.sessions.map((item) => item.session_id), [own.id]);
+  const httpList = await (await fetch(base + '/v1/sessions', { headers })).json();
+  assert.deepEqual(httpList.sessions.map((item) => item.session_id), [own.id]);
+  assert.equal((await request('session.resume', { session_id: outside.id })).ok, false);
+  assert.equal((await request('turn.interrupt', { session_id: own.id, thread_id: outside.id })).ok, false);
+  assert.equal((await request('file.read', { session_id: own.id, path: 'escape/private.txt' })).ok, false);
+  assert.equal((await request('file.read', { session_id: own.id, path: '../other-project/private.txt' })).ok, false);
+  const file = await request('file.read', { session_id: own.id, path: 'readme.txt' });
+  assert.equal(file.payload.content, 'allowed fixture');
+  assert.equal((await request('approval.response', { session_id: own.id, request_id: 'forged', decision: 'accept' })).ok, false);
+  const directories = await request('directory.list', { path: project });
+  assert.equal(directories.ok, true);
+  assert.deepEqual(directories.payload.directories, []);
+  assert.equal(directories.payload.parent_path, null);
+  const seen = await request('session.start', { cwd: project, config: { model_reasoning_effort: 'high' }, approvalPolicy: 'never' });
+  assert.equal(seen.ok, true);
+  assert.equal((await request('goal.set', { session_id: own.id, objective: 'fixture' })).ok, false);
+  const closed = once(ws, 'close');
+  backend.emit('message', { type: 'notification', method: 'error', params: { code: 'codex_process_exit' } });
+  assert.equal((await closed)[0], 1011);
+  await assert.rejects(fetch(base + '/healthz'));
+});

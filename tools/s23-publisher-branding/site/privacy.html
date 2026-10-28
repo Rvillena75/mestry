@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Cómo MESTRY S23 Publisher accede, utiliza, almacena y protege los datos de Google Drive en su integración personal.">
+  <meta name="referrer" content="no-referrer">
+  <link rel="canonical" href="https://rvillena75.github.io/privacy.html">
+  <link rel="stylesheet" href="styles.css">
+  <title>Política de privacidad · MESTRY S23 Publisher</title>
+</head>
+<body>
+  <a class="skip" href="#contenido">Ir al contenido</a>
+  <header class="wrap masthead">
+    <a class="brand" href="./" aria-label="MESTRY S23 Publisher, inicio">MESTRY <span>S23 Publisher</span></a>
+    <nav aria-label="Principal"><a href="./">Inicio</a></nav>
+  </header>
+  <main id="contenido" class="wrap prose">
+    <p class="eyebrow">Actualizada el 21 de octubre de 2026</p>
+    <h1>Política de privacidad</h1>
+    <p class="lead">MESTRY S23 Publisher es una herramienta personal, operada por el propietario de la cuenta de GitHub <a href="https://github.com/Rvillena75">Rvillena75</a>, para publicar documentos desde su Samsung S23 a su propia cuenta de Google Drive.</p>
+
+    <h2>Qué acceso solicita</h2>
+    <p>La aplicación utiliza Google OAuth con un cliente de escritorio y un único permiso: <code>https://www.googleapis.com/auth/drive.file</code>. Este permiso permite trabajar con los archivos creados o autorizados para la aplicación; no concede acceso general a todo Google Drive.</p>
+    <p>La implementación actual publica un documento Markdown de prueba de hasta 64 KiB en una carpeta privada de revisión. No recorre toda la unidad ni solicita acceso a Gmail, contactos, calendario u otros servicios.</p>
+
+    <h2>Qué datos accede y para qué los utiliza</h2>
+    <ul>
+      <li>La dirección de correo de la cuenta de Drive, para comprobar que la autorización corresponde al propietario previsto.</li>
+      <li>El contenido del documento enviado desde el teléfono y de las versiones descargadas de Drive, para publicarlo y verificar su integridad.</li>
+      <li>Identificadores, nombres, tipos de archivo, carpetas, propietario y permisos de los archivos accesibles a la aplicación, para confirmar su ubicación y privacidad.</li>
+      <li>Huellas SHA-256, números de versión y referencias de publicación, para evitar duplicados y conservar versiones anteriores.</li>
+      <li>Tokens de acceso y renovación de Google OAuth y la configuración del cliente, para mantener la autorización y renovar el acceso sin solicitar la contraseña de Google.</li>
+    </ul>
+
+    <h2>Dónde se almacenan</h2>
+    <p>El documento de origen se guarda en el entorno de trabajo del S23. Las versiones publicadas se almacenan en la cuenta privada de Google Drive del propietario. El S23 conserva un registro local de identificadores, versiones y huellas de contenido.</p>
+    <p>Las credenciales OAuth y sus copias de recuperación se guardan en el almacenamiento privado de Termux del S23, con permisos restringidos. Horus solicita las publicaciones mediante una clave SSH limitada y no recibe los tokens de Google.</p>
+    <p>La autorización interactiva inicial y las reautorizaciones se realizan desde el navegador del propietario con un asistente en su PC. Ese asistente maneja el resultado en memoria y lo transfiere por SSH al S23; no guarda una copia del token en el PC. El archivo de configuración del cliente OAuth permanece privado en los dispositivos del propietario.</p>
+
+    <h2>Transferencias y otros servicios</h2>
+    <p>El publicador se comunica mediante HTTPS con los servicios de autorización de Google y con Google Drive. No vende datos, no incorpora publicidad y no envía los datos obtenidos de Drive a servicios de inteligencia artificial. Las herramientas que el propietario utilice por separado para redactar documentos tienen sus propias condiciones y no forman parte de este publicador.</p>
+    <p>El publicador no añade permisos para compartir archivos con terceros ni publica sus documentos en esta web. Las consultas a soporte deben omitir contenido privado, contraseñas y credenciales.</p>
+    <p>El uso de la información recibida de las API de Google cumple la <a href="https://developers.google.com/terms/api-services-user-data-policy">Política de Datos del Usuario de los Servicios de API de Google</a>, incluidos sus requisitos de uso limitado.</p>
+
+    <h2>Conservación, revocación y eliminación</h2>
+    <p>Los documentos, versiones y registros locales se conservan hasta que el propietario los elimine. Las copias privadas de credenciales se conservan para recuperación y pueden eliminarse una vez comprobada la nueva autorización. No hay una eliminación automática de versiones publicadas.</p>
+    <p>El propietario puede retirar el acceso desde <a href="https://myaccount.google.com/connections">las conexiones de su cuenta de Google</a> y eliminar las credenciales y registros locales del S23. Revocar el acceso detiene futuras operaciones, pero no borra los documentos ya guardados en Drive; estos se eliminan por separado desde Drive. Borrar únicamente un archivo local de credenciales no revoca el consentimiento concedido en Google.</p>
+    <p>Los tokens pueden caducar o ser revocados. La herramienta no promete acceso permanente y requiere una nueva autorización cuando Google deja de aceptar la renovación.</p>
+
+    <h2>Esta página web</h2>
+    <p>Estas páginas estáticas no contienen formularios, analítica, publicidad ni scripts de seguimiento propios. GitHub Pages las aloja y puede tratar datos técnicos de las visitas, como la dirección IP, conforme a la <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">declaración de privacidad de GitHub</a>. Ninguna credencial OAuth ni documento de Drive se publica en el repositorio de esta web.</p>
+
+    <h2>Contacto y cambios</h2>
+    <p>Para consultas generales, utiliza el <a href="https://github.com/Rvillena75/Rvillena75.github.io/issues">canal de contacto del proyecto</a>. También puedes utilizar el correo de asistencia que aparece en el consentimiento de Google. No incluyas datos personales ni secretos en consultas públicas.</p>
+    <p>Si cambia el acceso, el uso o la transferencia de datos, se actualizará esta política antes de aplicar el cambio y se solicitará un nuevo consentimiento cuando corresponda.</p>
+  </main>
+  <footer class="wrap footer"><a href="./">Volver al inicio</a><span>MESTRY S23 Publisher</span></footer>
+</body>
+</html>

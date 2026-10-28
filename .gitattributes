@@ -1,0 +1,4 @@
+# Fuentes portables; conservar exactamente los bytes del parche fijado por hash.
+* text=auto eol=lf
+*.patch -text whitespace=-blank-at-eol
+*.md text eol=lf whitespace=-blank-at-eol
