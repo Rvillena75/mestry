@@ -74,4 +74,17 @@ del runtime. El parche upstream se aplicó sobre el tar fijado y sus **68 hashes
 coincidieron. No se compiló Android ni se ejecutaron tareas de modelo en esta fase.
 Se cotejaron los **1.818 archivos** del original: siguen íntegros y sin cambios.
 
-Publicación y verificación remota pendientes hasta registrar los resultados.
+**Publicación completada:** [Rvillena75/mestry](https://github.com/Rvillena75/mestry),
+visibilidad **PUBLIC**, `isPrivate=false`, rama `main`. Primer commit publicado:
+`804e63b068054259ade729357c37b436050094c9`. Se verificó igualdad entre HEAD local
+y `refs/heads/main` remoto, acceso HTTP 200 al README sin autenticación y un
+segundo clon público limpio: **162 archivos idénticos byte a byte**.
+
+La edición pública incluye README en inglés, arquitectura, pruebas, atribución
+upstream y texto GPL del código derivado. Se añadieron temas de Android, Kotlin,
+Python, Linux, SSH, Google Drive, Codex y herramientas de desarrollo para facilitar
+su consulta. No se presenta como un producto publicado en Play Store.
+
+Este resultado se registra en un segundo commit de documentación, publicado por
+push normal y con comprobación posterior de la referencia final. No se repiten
+las pruebas de código por esa actualización exclusivamente documental.
