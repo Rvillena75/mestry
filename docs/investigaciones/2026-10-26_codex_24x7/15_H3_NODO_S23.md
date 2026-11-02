@@ -156,6 +156,56 @@ antes de volver a escribir. Ambos agentes pueden trabajar en paralelo con
 servidor compatible; la interfaz de un mismo teléfono requiere turnos.
 
 La pantalla del S23 se mantuvo temporalmente encendida por USB para evitar
-interrumpir la validación con bloqueos. Su valor previo se conserva fuera del
-repositorio y se restaurará al terminar. Esto impide presentar este ensayo
-como prueba de reposo o de funcionamiento con el PC apagado: corresponden a H5.
+interrumpir la validación con bloqueos. Se restauró y releyó su valor original
+`stay_on_while_plugged_in=0`. No se llegó a modificar ese ajuste en el S25.
+Este ensayo no prueba reposo ni funcionamiento con el PC apagado: corresponden a H5.
+
+## Alcance pendiente para cerrar H3
+
+**H3 no se declara cerrada.** El nodo y Git están validados, pero todavía no
+se ejecutó una tarea de Codex desde un hilo nuevo del S25 en este clon.
+Tampoco se acredita aún una aplicación automática real de un candidato por
+la entrada del bridge: los primeros incrementos se incorporaron mediante
+bootstrap explícitamente revisado. Las suites cubren ese mecanismo; la
+aceptación física sigue separada de los tests.
+
+| Comprobación | Estado / evidencia |
+|---|---|
+| Clon real ARM64 y entorno compatible | Verificado: contrato y 137 tests en el S23 |
+| Despliegue sobre release privada anterior | Verificado: `H3_ADMITTED`, pairing y estado conservados |
+| Fetch desde supervisor existente | Verificado: estado real del polling, sin aplicación de archivos |
+| Push S23 y recepción WSL | Verificado: `f0df88d…`, documento recibido y 137 tests WSL |
+| Aplicación automática desde entrada gestionada | Pendiente de prueba física; no confundir con el bootstrap |
+| Hilo nuevo S25 que lea estado y continúe | Pendiente de transporte disponible y operación de interfaz coordinada |
+| Lock durante un turno real del cliente | Cubierto en fixtures; pendiente de la misma prueba física S25 |
+| PC apagado, reposo y reinicio | H5; no probado aquí |
+
+Como alternativa no destructiva al ADB intermitente se intentó SSH al guest
+mediante el salto Termux existente. La identidad WSL actual fue rechazada por
+SSH; no se obtuvo sesión ni se registraron claves, habilitaron métodos o
+modificaron permisos. No afecta al acceso legítimo Bare terminal ya utilizado.
+El pin temporal del host se mantuvo separado del `known_hosts` normal. No se
+copiaron contraseñas, tokens ni hogares Codex.
+
+La documentación técnica de esta aceptación se publicó en WSL como
+`c4b3cb21b12b47d916a1c9b196ae56f6271485cc`. Su recepción en el S23 todavía
+no se confirma. El último commit originado allí y recibido en WSL es `f0df88d…`;
+no se presenta un fetch supuesto como prueba de aplicación.
+
+Para reanudar sin repetir H0/H1/H2:
+
+1. Coordinar una ventana sin reinicios de ADB ni manejo concurrente de las
+   pantallas S23/S25. El otro hilo puede continuar con código u otro dispositivo.
+   Reutilizar servidor/versión compatibles; el lock Git no controla el daemon ADB.
+2. En MESTRY del S25, usar la conexión SSH guardada y comprobar `/healthz` por
+   su loopback 18787. Mantener la app en primer plano durante el ensayo: la
+   política del cliente permite cerrar su VPN al salir sin tarea activa. No
+   cambiar claves, scopes ni reenvíos como respuesta automática a un rechazo.
+3. Abrir una conversación nueva sobre `/workspace/projects/mestry`. Comprobar
+   la recepción validada del HEAD publicado, leer AGENTS/STATUS/recibo y ejecutar
+   una tarea acotada. Probar `--within-turn finish` primero como preview y
+   verificar que otro escritor obtiene `BUSY` durante ese turno. Registrar
+   después el resultado, el HEAD y la liberación del lock.
+
+El siguiente incremento sigue siendo esta aceptación S25. No avanzar H4 como
+si H3 estuviera cerrada, ni reinstalar Horus/Codex para resolver esta coordinación.

@@ -13,6 +13,9 @@ repositorio. Originales seleccionados: Google Drive según el ADR congelado.
   bridge integrado y polling existente observados. Push real S23 `f0df88d`
   recibido/validado en WSL. Falta completar la entrada del cliente S25 por su
   túnel guardado. [Registro H3](docs/investigaciones/2026-10-26_codex_24x7/15_H3_NODO_S23.md).
+- **Siguiente acción H3:** coordinar el uso de ADB y probar el hilo nuevo S25,
+  la recepción automática y el lock real. La autenticación SSH adicional WSL→Horus
+  fue rechazada; no se modificó. Bare terminal conserva el acceso ya verificado.
 - **H4/H5:** autoridad/recuperación documental y ensayos prolongados pendientes;
   GitHub disponible no demuestra recepción S23 ni disponibilidad 24/7.
 
