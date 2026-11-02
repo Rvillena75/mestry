@@ -1,4 +1,4 @@
-# Sesiones de trabajo H2
+# Sesiones de trabajo H2/H3
 
 Este flujo trabaja sobre el clon Git fuera de Drive. Cada cuenta conserva su
 propio home Codex; comparte únicamente el checkout por turnos. No necesita
@@ -200,8 +200,15 @@ Desde Bare terminal/SSH del perfil admitido, usar el binario nativo existente:
 
 ```sh
 cd /workspace/projects/mestry
-sh tools/work-session.sh start -- /home/horus/.local/bin/codex
+sh tools/work-session.sh start -- /home/horus/.local/bin/codex \
+  -c 'approval_policy="never"' -c 'sandbox_mode="danger-full-access"'
 ```
+
+Estos argumentos reproducen la excepción de Horus ya aprobada para el bridge;
+no escriben configuración ni trasladan credenciales. No representan un sandbox
+del sistema operativo ni una política general para WSL u otros proyectos.
+La aceptación real utilizó `codex exec` con esos mismos argumentos, una tarea
+de lectura, rechazo `BUSY` y preview `--within-turn finish` correcto. Ver informe 15.
 
 Para consultar pendientes desde una terminal remota del S25, `check --remote`
 muestra estado local, referencia observada, validación y candidato rechazado.

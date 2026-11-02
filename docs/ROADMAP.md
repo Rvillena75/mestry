@@ -15,9 +15,10 @@ cierre H0, sus correcciones y la publicación pública posterior de MESTRY.
   descendientes, publicación explícita, estado privado y detector de cambios de
   dependencias. [Uso](WORK_SESSIONS.md) y
   [aceptación H2](investigaciones/2026-10-26_codex_24x7/14_H2_FLUJO_TRABAJO.md).
-- **H3:** clon real S23 admitido, 137 tests ARM64 y push S23/recepción WSL probados;
-  pendiente terminar la admisión desde el cliente S25. El informe 15 distingue
-  el despliegue real de las comprobaciones todavía en curso.
+- **H3:** clon real S23, recepción al iniciar sesión, 137 tests ARM64 y tarea nueva
+  de Codex CLI verificados; push S23/recepción WSL y guardas de concurrencia reales
+  probados. Pendiente la admisión desde el cliente/bridge S25. El informe 15 separa
+  la aceptación CLI del nodo de la prueba física de ese cliente.
 - **H4/H5:** componentes documentales y de supervisión parciales; faltan
   recuperación/autoridades completas y ensayos sin PC/reposo/24 h.
 

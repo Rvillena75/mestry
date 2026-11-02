@@ -9,17 +9,18 @@ repositorio. Originales seleccionados: Google Drive según el ADR congelado.
 - **H2, cerrada en WSL:** flujo local `start/finish/receive/check`, comprobador de entorno y
   política revisada implementados. [Guía operativa](docs/WORK_SESSIONS.md) y
   [evidencia H2](docs/investigaciones/2026-10-26_codex_24x7/14_H2_FLUJO_TRABAJO.md).
-- **H3, activada en S23; S25 en validación:** clon ARM64 con 137 tests,
-  bridge integrado y polling existente observados. Push real S23 `f0df88d`
-  recibido/validado en WSL. Falta completar la entrada del cliente S25 por su
-  túnel guardado. [Registro H3](docs/investigaciones/2026-10-26_codex_24x7/15_H3_NODO_S23.md).
-- **Siguiente acción H3:** coordinar el uso de ADB y probar el hilo nuevo S25,
-  la recepción automática y el lock real. La autenticación SSH adicional WSL→Horus
-  fue rechazada; no se modificó. Bare terminal conserva el acceso ya verificado.
-- **Continuación S23:** se reprodujo un fallo de cierre del helper tras SIGTERM
-  y se corrigió sin ampliar el plazo ni omitir tests. Reproducción y corrección
-  verificadas en WSL; nueva aceptación ARM64 y tarea Codex en curso. El otro hilo
-  conserva el manejo del S25.
+- **H3, nodo S23 verificado; cliente S25 pendiente:** recepción automática real
+  mediante `start`, 137 tests ARM64 y tarea nueva de Codex sobre `bdf3e4c`.
+  La recepción concurrente devolvió `BUSY`; el preview `--within-turn finish`
+  funcionó con índice intacto. Al terminar: `idle`, limpio, libre y sin candidato
+  fallido. Push S23 `f0df88d` y recepción WSL ya comprobados.
+  [Registro H3](docs/investigaciones/2026-10-26_codex_24x7/15_H3_NODO_S23.md).
+- **Siguiente acción H3:** verificar una conversación nueva, recepción y lock
+  a través del bridge/cliente S25. La aceptación CLI del S23 no sustituye esa
+  prueba física. No repetir H0/H1/H2 ni reinstalar el entorno.
+- **Corrección S23:** el helper atiende cancelación con esperas acotadas;
+  reproducción antes/después y aceptación ARM64 completadas, con el mismo plazo
+  de cierre de 15 s y todos los tests conservados.
 - **H4/H5:** autoridad/recuperación documental y ensayos prolongados pendientes;
   GitHub disponible no demuestra recepción S23 ni disponibilidad 24/7.
 

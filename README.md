@@ -21,7 +21,7 @@ flowchart LR
     Bridge --> Broker["Termux · bounded Drive broker"]
     Broker --> Drive["Google Drive · selected documents"]
     GitHub["GitHub · project versions"] --- WSL["Windows / WSL · local development"]
-    GitHub -- "S23 clone · validated Git versions" --> Codex
+    GitHub <-->|"S23 clone · validated Git versions"| Codex
 ```
 
 ## Project contributions
@@ -57,13 +57,16 @@ not a client written entirely from scratch. See
   Workflow integration tests use disposable local Git repositories.
 - **H3 device evidence:** all 137 tests passed on Alpine ARM64; the existing
   bridge was admitted to the real project. A phone-originated receipt commit
-  was published to GitHub and received/validated in WSL. S25 entry is under validation.
+  was published to GitHub and received/validated in WSL. A fresh native Codex
+  CLI task then verified the updated project and both session guards. S25 entry
+  remains a separate acceptance test.
 - The pinned archive and patch reproduce **68 text files** with matching hashes.
 - Live Drive publication and FolderSync transfer/read-back were separately
   exercised; the offline test suite does not stand in for those device tests.
 
 This does **not** establish 24/7 availability or reboot recovery. Background
-polling fetches references; application at managed entry is still being validated.
+polling fetches references; validated application at managed CLI entry is proven.
+Entry through the S25 client/bridge remains under validation.
 The workspace policy is not an OS security sandbox. The
 full-access mode used by the personal Horus deployment is a documented exception,
 not a safe default for arbitrary projects.
@@ -107,7 +110,7 @@ Start with [current project status](STATUS.md) and the
 [H2 session guide](docs/WORK_SESSIONS.md). Both independent Codex accounts can
 use the same WSL checkout in separate turns. Publication selects explicit paths;
 the default finish command previews the candidate without committing or pushing.
-Phone admission is deployed; client entry and automatic receipt remain under H3 validation.
+Phone admission and managed CLI receipt are verified; S25 client entry remains under H3 validation.
 
 H3 adds a bridge turn guard using the same local checkout lock, an optional
 fetch-only task in the existing supervisor, and a device-local release overlay.

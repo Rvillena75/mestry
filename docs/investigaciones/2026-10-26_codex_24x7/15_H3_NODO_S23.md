@@ -1,9 +1,9 @@
 # MESTRY — H3: clon operativo S23 y entrada desde S25
 
-Fecha: **02/11/2026**, America/Santiago. **ACTIVADA EN S23; ACEPTACIÓN S25 EN
-VALIDACIÓN**. El clon ARM64 y la ida/vuelta Git ya tienen evidencia real; falta
-terminar la entrada del cliente móvil. Continúa H2, sin repetir H0 ni modificar
-el ADR congelado.
+Fecha: **02/11/2026**, America/Santiago. **NODO S23 VERIFICADO; CLIENTE S25
+PENDIENTE**. Clon ARM64, ida/vuelta Git, recepción gestionada y una tarea nueva
+de Codex CLI tienen evidencia real. Falta la entrada desde el cliente móvil.
+Continúa H2, sin repetir H0 ni modificar el ADR congelado.
 
 ## Incremento preparado
 
@@ -164,10 +164,9 @@ Este ensayo no prueba reposo ni funcionamiento con el PC apagado: corresponden a
 
 **H3 no se declara cerrada.** El nodo y Git están validados, pero todavía no
 se ejecutó una tarea de Codex desde un hilo nuevo del S25 en este clon.
-Tampoco se acredita aún una aplicación automática real de un candidato por
-la entrada del bridge: los primeros incrementos se incorporaron mediante
-bootstrap explícitamente revisado. Las suites cubren ese mecanismo; la
-aceptación física sigue separada de los tests.
+La aplicación automática mediante `start` del CLI sí está acreditada por la
+continuación S23 de abajo. La entrada del bridge sigue pendiente de prueba
+física; el bootstrap inicial y las suites no se presentan como esa aceptación.
 
 | Comprobación | Estado / evidencia |
 |---|---|
@@ -175,9 +174,11 @@ aceptación física sigue separada de los tests.
 | Despliegue sobre release privada anterior | Verificado: `H3_ADMITTED`, pairing y estado conservados |
 | Fetch desde supervisor existente | Verificado: estado real del polling, sin aplicación de archivos |
 | Push S23 y recepción WSL | Verificado: `f0df88d…`, documento recibido y 137 tests WSL |
-| Aplicación automática desde entrada gestionada | Pendiente de prueba física; no confundir con el bootstrap |
+| Aplicación automática desde entrada gestionada | Verificada en CLI `start` hasta `bdf3e4c…`; bridge pendiente |
+| Hilo nuevo Codex CLI en S23 | Verificado: lectura de estado, entorno, HEAD y guardas reales |
 | Hilo nuevo S25 que lea estado y continúe | Pendiente de transporte disponible y operación de interfaz coordinada |
-| Lock durante un turno real del cliente | Cubierto en fixtures; pendiente de la misma prueba física S25 |
+| Lock durante una sesión Codex CLI real | Verificado: `receive` rechazado y preview autorizado desde el escritor |
+| Lock durante un turno del bridge/cliente S25 | Cubierto en fixtures; pendiente de la prueba física S25 |
 | PC apagado, reposo y reinicio | H5; no probado aquí |
 
 Como alternativa no destructiva al ADB intermitente se intentó SSH al guest
@@ -187,10 +188,10 @@ modificaron permisos. No afecta al acceso legítimo Bare terminal ya utilizado.
 El pin temporal del host se mantuvo separado del `known_hosts` normal. No se
 copiaron contraseñas, tokens ni hogares Codex.
 
-La documentación técnica de esta aceptación se publicó en WSL como
-`c4b3cb21b12b47d916a1c9b196ae56f6271485cc`. Su recepción en el S23 todavía
-no se confirma. El último commit originado allí y recibido en WSL es `f0df88d…`;
-no se presenta un fetch supuesto como prueba de aplicación.
+Las publicaciones documentales `c4b3cb2…` y `67b16fd…` llegaron al S23 como
+antecesores de `bdf3e4c…` mediante el fast-forward validado de `start`.
+El commit originado allí y recibido en WSL es `f0df88d…`; su recibo documenta
+la admisión inicial, mientras STATUS y esta sección contienen la aceptación posterior.
 
 Para reanudar sin repetir H0/H1/H2:
 
@@ -212,8 +213,8 @@ si H3 estuviera cerrada, ni reinstalar Horus/Codex para resolver esta coordinaci
 
 ## Continuación exclusiva en S23 — cancelación del helper
 
-El usuario asignó el S25 al otro hilo. Esta continuación utiliza exclusivamente
-la interfaz del S23 y conserva bridge, SSH, VPN y emparejamientos existentes.
+Esta continuación utiliza exclusivamente la interfaz del S23; la aceptación
+del S25 permanece separada. Se conservan bridge, SSH, VPN y emparejamientos existentes.
 El supervisor observó `healthy`, cero fallos y `update_pending=true`: HEAD local
 `f0df88d…`, remoto `67b16fd…`, el **02/11 a las 21:35:55 UTC**. El fetch real
 detectó correctamente la actualización sin aplicarla en segundo plano.
@@ -232,6 +233,49 @@ con la corrección pasaron los cuatro tests en **1,675 s**. Se conservan las
 comprobaciones de artefacto único, HTTP 404, descarga única, hijo cerrado y
 puerto cerrado. No se amplió el timeout de 15 s ni se omitió ningún caso.
 
-La validación ARM64 de esta corrección y la tarea nueva de Codex se registrarán
-después de ejecutarlas. El total sigue siendo 137 tests; el fixture de SSH es
-sintético y no modifica túneles ni servicios reales.
+La corrección quedó publicada en **`bdf3e4c12ef7a97da79ca93416150b9c67aa704d`**.
+Un clon público anónimo cotejó sus **180 archivos**, bytes y objetos Git
+normalizados, sin diferencias y con árbol limpio. El fixture SSH es sintético
+y no modifica túneles ni servicios reales.
+
+## Aceptación real posterior — sesión nativa S23
+
+Un intento obtuvo `BUSY`; el chequeo posterior mostró `busy=false`, `phase=idle`,
+`dirty=false` y ninguna recuperación pendiente. Se reintentó por el flujo normal,
+sin quitar locks, reaprobar políticas ni forzar Git. `start` recibió y validó
+`bdf3e4c…` antes de lanzar el escritor; no se ejecutó un merge manual para este
+incremento. Las ocho suites pasaron en Alpine: **54/4/12/13/3/38/9/4 = 137 tests**.
+
+Se inició una tarea **nueva** con el Codex nativo mediante `codex exec`. Leyó
+AGENTS, STATUS y el recibo, ejecutó `check-env.sh` y `git rev-parse HEAD`, y
+terminó con `H3_S23_READY`. No requirió conversaciones anteriores, no editó
+archivos y no instaló dependencias. Se usaron por invocación `approval_policy=never`
+y `sandbox_mode=danger-full-access`, iguales a la excepción ya aprobada para
+Horus; no se escribió configuración. La restricción de lectura de esta tarea
+procede de su instrucción y no demuestra un sandbox del SO.
+
+La salida de ejecución observada confirma:
+
+- `check-env.sh`: target `alpine-aarch64`, aprobación coincidente, sin errores
+  ni instalaciones; Git 2.54.0, Node 24.18.1 y Python 3.14.8.
+- `git rev-parse HEAD`: `bdf3e4c12ef7a97da79ca93416150b9c67aa704d`.
+- `receive` dentro del escritor: salida **3**, `BLOCKED/BUSY`, trabajo preservado.
+- `--within-turn finish README.md`: salida **0**, `OK`, `index_unchanged=true`,
+  `changed=[]`, cero commits salientes y publicación no solicitada. Esto prueba
+  la autorización real por ascendencia del escritor en el guest.
+- Al finalizar: `start` devolvió `OK`, `phase=idle`, `dirty=false`. Una consulta
+  posterior independiente confirmó `busy=false`, `failed_candidate=null`,
+  `validation_matches_head=true` y los **137 tests** persistidos.
+- La consulta seleccionada de entorno confirmó `HOME=/home/horus` y
+  `CODEX_HOME` no definido. No se imprimieron el entorno completo ni archivos de auth.
+- El supervisor existente confirmó `worker_running=true`, `enabled=true` y
+  health coincidente. Su actualización natural de **22:09:51 UTC** mostró
+  `healthy`, cero fallos consecutivos, proyecto `fetched`, HEAD y remoto
+  `bdf3e4c…`, `update_pending=false`. No se reinició para obtener ese resultado;
+  la recuperación tras reinicio continúa sin acreditar y pertenece a H5.
+
+El último mensaje de esta prueba permanece en el estado privado del S23; no
+se publica una transcripción. La aceptación de código corresponde a `bdf3e4c…`;
+las actualizaciones documentales siguientes usan el mismo flujo de recepción.
+Permanece pendiente la prueba del cliente S25/bridge, que no se operó durante
+esta continuación. Tampoco se probaron PC apagado, reposo o reinicio de H5.
