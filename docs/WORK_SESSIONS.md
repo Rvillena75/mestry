@@ -195,3 +195,15 @@ polling que requiera revisión. No ejecutar por simple prueba local en WSL.
 La ruta S25 apunta al proyecto real tras admitirlo. Su asignación documental
 Drive no se amplía automáticamente; H4 conserva ese control por separado.
 La prueba de independencia prolongada del PC permanece en H5.
+
+Desde Bare terminal/SSH del perfil admitido, usar el binario nativo existente:
+
+```sh
+cd /workspace/projects/mestry
+sh tools/work-session.sh start -- /home/horus/.local/bin/codex
+```
+
+Para consultar pendientes desde una terminal remota del S25, `check --remote`
+muestra estado local, referencia observada, validación y candidato rechazado.
+El estado del polling se conserva en el `status.json` privado del supervisor;
+ninguno de esos estados operativos se sincroniza por Drive o Git.

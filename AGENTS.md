@@ -8,14 +8,16 @@ documental de los originales seleccionados según el ADR congelado.
 
 ## Antes de trabajar
 
-1. Leer `STATUS.md`, `docs/WORK_SESSIONS.md`, `README.md`,
-   `docs/GITHUB_PUBLICATION.md` y los informes 09–15 de
-   `docs/investigaciones/2026-10-26_codex_24x7/`.
+1. Leer `STATUS.md`, `README.md` y `docs/WORK_SESSIONS.md`. Para publicación o
+   despliegue, consultar `docs/GITHUB_PUBLICATION.md` y el informe 15 de
+   `docs/investigaciones/2026-10-26_codex_24x7/`. Los informes 09–14 son
+   antecedentes: leerlos al resolver una decisión o incidencia relacionada.
 2. Revisar `git status` y los commits recientes; conservar cambios locales.
    No ejecutar reset, clean, stash, pull, checkout ni rebase automáticamente
    sobre trabajo ajeno o sin confirmar.
 3. Leer el ADR `MESTRY_Arquitectura_Congelada_Google_Drive_Sincronizacion_RAG.md`
-   antes de proponer cambios documentales. Los informes históricos conservan
+   antes de proponer cambios de autoridad, sincronización documental o RAG.
+   Los informes históricos conservan
    su fecha y no certifican por sí solos el estado actual de los teléfonos.
 
 ## Límites
