@@ -96,7 +96,9 @@ class HelperTests(unittest.TestCase):
                     urllib.request.urlopen(base + '/', timeout=2)
                 self.assertEqual(error.exception.code, 404)
                 process.send_signal(signal.SIGTERM)
-                self.assertEqual(process.wait(timeout=5), 0)
+                # The helper permits 5s graceful + 2s forced child shutdown,
+                # followed by HTTP thread cleanup. PRoot can exercise that path.
+                self.assertEqual(process.wait(timeout=15), 0)
                 closed = json.loads(result.read_text())
                 self.assertEqual(closed['successful_downloads'], 1)
                 self.assertTrue(closed['s23_reverse_forward_process_closed'])

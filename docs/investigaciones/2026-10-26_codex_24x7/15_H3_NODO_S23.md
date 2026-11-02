@@ -88,3 +88,10 @@ normalizado con Git, cada ruta seleccionada antes de aceptar el candidato.
 Los cambios del ensayo anterior quedaron locales; no se descartaron ni se
 reescribieron commits remotos. La suite incorpora ese caso sin relajar los
 guards: **137 tests** (54/4/12/13/3/38/9/4).
+
+El siguiente ensayo ARM64 pasó los guards corregidos y encontró otro supuesto
+del harness: esperaba la salida del stager en 5 s, mientras ese helper permite
+5 s de terminación más 2 s de cierre forzado del hijo y limpieza HTTP. En
+PRoot se observó ese recorrido. El test espera ahora hasta 15 s y mantiene las
+comprobaciones de salida 0, túnel hijo cerrado, una descarga y puerto cerrado.
+No se cambió el comportamiento ni el límite productivo del helper.
