@@ -69,8 +69,15 @@ def read_private(path):
     return json.loads(path.read_text())
 
 
+def process_identity(pid):
+    if not isinstance(pid, int) or pid < 2:
+        raise Blocked('PROCESS_IDENTITY_REQUIRED')
+    fields = Path(f'/proc/{pid}/stat').read_text().rsplit(')', 1)[1].split()
+    return {'pid': pid, 'parent': int(fields[1]), 'start': fields[19]}
+
+
 class Session:
-    def __init__(self, root, storage=None):
+    def __init__(self, root, storage=None, allow_borrow=False):
         self.root = root.resolve()
         base = storage or Path.home() / ".local/state/mestry-workflow"
         self.directory = base.resolve() / digest(os.fsencode(self.root))[:20]
@@ -78,6 +85,27 @@ class Session:
             raise Blocked("STATE_MUST_BE_OUTSIDE_CHECKOUT")
         self.cfg = None
         self.state = {}
+        self.allow_borrow = allow_borrow
+        self.borrowed = False
+        self.latest_validation = None
+
+    def authorize_borrow(self):
+        try:
+            lease = read_private(self.directory / 'lease.json')
+            owner = process_identity(lease['owner']['pid'])
+            writer = process_identity(lease['writer']['pid'])
+            phase = read_private(self.directory / 'status.json').get('phase')
+            if owner != lease['owner'] or writer != lease['writer'] or phase != 'running':
+                raise Blocked('WITHIN_TURN_NOT_AUTHORIZED')
+            pid = os.getpid()
+            for _ in range(64):
+                if pid == writer['pid']:
+                    self.borrowed = True
+                    return
+                pid = process_identity(pid)['parent']
+        except (OSError, ValueError, KeyError, Blocked):
+            pass
+        raise Blocked('WITHIN_TURN_NOT_AUTHORIZED')
 
     def git(self, *args, env=None, accept=(0,)):
         settings = dict(os.environ, GIT_TERMINAL_PROMPT="0", GIT_OPTIONAL_LOCKS="0")
@@ -136,6 +164,8 @@ class Session:
         return self.cfg["contract"]
 
     def context(self):
+        if self.borrowed:
+            self.authorize_borrow()
         if self.cfg["controller_sha"] != digest(SOURCE.read_bytes()) or self.cfg["checker_sha"] != digest(Path(check_env.__file__).read_bytes()):
             raise Blocked("CONTROLLER_REVIEW_REQUIRED")
         for name, expected in self.cfg["pins"].items():
@@ -171,10 +201,20 @@ class Session:
             try:
                 fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
             except BlockingIOError:
-                raise Blocked("BUSY") from None
+                if not self.allow_borrow:
+                    raise Blocked("BUSY") from None
+                self.authorize_borrow()
+            else:
+                if self.allow_borrow:
+                    raise Blocked('WITHIN_TURN_NOT_AUTHORIZED')
             yield handle
 
     def record(self, result, **fields):
+        if self.borrowed:
+            self.state = read_private(self.directory / 'status.json')
+            if self.latest_validation is not None:
+                self.state['validation'] = self.latest_validation
+            fields['phase'] = 'recovery_required' if self.state.get('phase') == 'recovery_required' else 'running'
         self.state.update({"schema": 1, "project": self.contract["project"],
                            "last_attempt": {"at": now(), "result": result}, **fields})
         write_private(self.directory / "status.json", self.state)
@@ -296,6 +336,7 @@ class Session:
                 results.append({"name": rule["name"], "tests": count})
         self.state["validation"] = {"at": now(), "tree": self.text("rev-parse", revision + '^{tree}'),
                                     "environment": environment["dependency_fingerprint"], "results": results}
+        self.latest_validation = self.state['validation']
         return results
 
     def receive(self, fetch_only=False):
@@ -390,6 +431,7 @@ class Session:
                 if self.text('rev-parse', 'HEAD^{tree}') != tree:
                     raise Blocked('COMMIT_CANDIDATE_CHANGED')
             self.outgoing(remote)
+            self.context()
             expected = self.text('rev-parse', 'HEAD')
             # A lost acknowledgement is reconciled before declaring a pending push.
             try:
@@ -449,13 +491,20 @@ class Session:
                 self.validate('HEAD')
         self.record('running', phase='running')
         print(json.dumps({"state": "SESSION_READY", **receive}), flush=True)
-        with run_foreground(command, self.root) as process:
-            code = process.wait()
+        lease_path = self.directory / 'lease.json'
+        try:
+            with run_foreground(command, self.root) as process:
+                write_private(lease_path, {'owner': process_identity(os.getpid()),
+                                          'writer': process_identity(process.pid)})
+                code = process.wait()
+        finally:
+            self.state = read_private(self.directory / 'status.json')
+            lease_path.unlink(missing_ok=True)
         if code:
             raise Blocked('COMMAND_FAILED_WORK_PRESERVED')
         return {"head": self.text('rev-parse', 'HEAD'), "dirty": bool(self.status()), "phase": "idle"}
 
-    def lease(self, offline=False, observe_only=False):
+    def lease(self, offline=False, observe_only=False, writer_pid=None):
         """Hold the same checkout lock for one bridge operation/turn, over stdin."""
         self.environment()
         dirty = bool(self.status())
@@ -465,14 +514,24 @@ class Session:
             received = self.receive(fetch_only=dirty or observe_only)
         if not dirty and self.state.get('validation', {}).get('tree') != self.text('rev-parse', 'HEAD^{tree}'):
             self.validate('HEAD')
-        self.record('running', phase='running')
-        print(json.dumps({"state": "LEASE_READY", "head": self.text('rev-parse', 'HEAD'),
-                          "dirty": dirty, "applied": received.get('applied', False)}), flush=True)
-        # EOF is ambiguous: the bridge may have died while Codex is still writing.
-        # Only an explicit terminal acknowledgement clears the persisted phase.
-        if sys.stdin.readline(128) != 'release\n':
-            self.record('lease_abandoned', phase='recovery_required')
-            raise Blocked('UNCLEAN_SESSION_REVIEW_REQUIRED')
+        lease_path = self.directory / 'lease.json'
+        if writer_pid is not None:
+            writer = process_identity(writer_pid)
+            if writer['parent'] != os.getppid():
+                raise Blocked('WRITER_NOT_SIBLING_OF_LEASE')
+            write_private(lease_path, {'owner': process_identity(os.getpid()), 'writer': writer})
+        try:
+            self.record('running', phase='running')
+            print(json.dumps({"state": "LEASE_READY", "head": self.text('rev-parse', 'HEAD'),
+                              "dirty": dirty, "applied": received.get('applied', False)}), flush=True)
+            # EOF is ambiguous: the bridge may have died while Codex still writes.
+            released = sys.stdin.readline(128) == 'release\n'
+            self.state = read_private(self.directory / 'status.json')
+            if not released:
+                self.record('lease_abandoned', phase='recovery_required')
+                raise Blocked('UNCLEAN_SESSION_REVIEW_REQUIRED')
+        finally:
+            lease_path.unlink(missing_ok=True)
         return {"head": self.text('rev-parse', 'HEAD'), "dirty": bool(self.status())}
 
 
@@ -517,6 +576,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--repo', type=Path, default=SOURCE.parent.parent)
     parser.add_argument('--state-root', type=Path)
+    parser.add_argument('--within-turn', action='store_true', help='Finish from the registered managed writer ancestry')
     commands = parser.add_subparsers(dest='action', required=True)
     setup = commands.add_parser('configure')
     setup.add_argument('--review-policy', action='store_true', required=True)
@@ -531,13 +591,16 @@ def main():
     lease = commands.add_parser('lease', help='Cooperative bridge lock; explicit release on stdin')
     lease.add_argument('--offline', action='store_true')
     lease.add_argument('--observe-only', action='store_true')
+    lease.add_argument('--writer-pid', type=int)
     end = commands.add_parser('finish')
     end.add_argument('--publish', action='store_true')
     end.add_argument('--message', default='Reviewed MESTRY change')
     end.add_argument('paths', nargs='*')
     args = parser.parse_args()
-    session = Session(args.repo, args.state_root)
+    session = Session(args.repo, args.state_root, allow_borrow=args.within_turn)
     try:
+        if args.within_turn and args.action != 'finish':
+            raise Blocked('ACTION_NOT_ADMITTED_INSIDE_TURN')
         if args.action == 'configure':
             with session.lock():
                 result = session.configure()
@@ -548,7 +611,7 @@ def main():
             else:
                 with session.lock():
                     try:
-                        if session.state.get('phase') in ('running', 'recovery_required'):
+                        if session.state.get('phase') in ('running', 'recovery_required') and not session.borrowed:
                             session.record('unclean_session', phase='recovery_required')
                             raise Blocked('UNCLEAN_SESSION_REVIEW_REQUIRED')
                         if args.action == 'receive':
@@ -556,7 +619,7 @@ def main():
                         elif args.action == 'finish':
                             result = session.finish(args.paths, args.message, args.publish)
                         elif args.action == 'lease':
-                            result = session.lease(args.offline, args.observe_only)
+                            result = session.lease(args.offline, args.observe_only, args.writer_pid)
                         else:
                             command = args.command[1:] if args.command[:1] == ['--'] else args.command
                             result = session.start(command, args.resume, args.offline)

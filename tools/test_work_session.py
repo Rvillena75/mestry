@@ -381,6 +381,51 @@ class WorkflowIntegration(unittest.TestCase):
             if process.poll() is None:
                 process.communicate('release\n', timeout=15)
 
+    def test_registered_writer_can_publish_without_releasing_outer_lease(self):
+        script = ('import sys,json,subprocess; print("WRITER_READY",flush=True); sys.stdin.readline();'
+                  'r=subprocess.run(json.loads(sys.argv[1]),capture_output=True,text=True);'
+                  'print(json.dumps({"rc":r.returncode,"result":json.loads(r.stdout.splitlines()[-1])}),flush=True);'
+                  'sys.stdin.readline()')
+        writer = subprocess.Popen([sys.executable, '-B', '-c', script, json.dumps(self.argv('--within-turn', 'finish', '--publish', 'calc.py'))],
+                                  stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        try:
+            self.assertEqual(writer.stdout.readline().strip(), 'WRITER_READY')
+            lease, _ = self.open_lease('--offline', '--writer-pid', str(writer.pid))
+            self.write('calc.py', 'VALUE = 7\n')
+            writer.stdin.write('go\n'); writer.stdin.flush()
+            result = json.loads(writer.stdout.readline())
+            self.assertEqual(result['rc'], 0, result)
+            self.assertTrue(result['result']['remote_contains_commit'])
+            self.assertEqual(self.command('check')['phase'], 'running')
+            self.command('--within-turn', 'finish', blocked='WITHIN_TURN_NOT_AUTHORIZED')
+            self.command('receive', blocked='BUSY')
+            lease.communicate('release\n', timeout=15)
+            self.assertEqual(lease.returncode, 0)
+            state = json.loads((self.state / 'status.json').read_text())
+            self.assertEqual(state['validation']['tree'], self.run_git(self.repo, 'rev-parse', 'HEAD^{tree}'))
+            self.assertEqual(state['phase'], 'idle')
+        finally:
+            writer.communicate('exit\n', timeout=15)
+
+    def test_within_turn_flag_cannot_bypass_a_free_checkout(self):
+        self.command('--within-turn', 'finish', blocked='WITHIN_TURN_NOT_AUTHORIZED')
+        self.command('--within-turn', 'receive', blocked='ACTION_NOT_ADMITTED_INSIDE_TURN')
+
+    def test_foreground_writer_can_finish_inside_managed_session(self):
+        self.write('calc.py', 'VALUE = 8\n')
+        script = ('import subprocess,sys,json,time; from pathlib import Path;'
+                  'lease=Path(sys.argv[2]); deadline=time.monotonic()+5;'
+                  '\nwhile not lease.exists() and time.monotonic()<deadline: time.sleep(.01)\n'
+                  'r=subprocess.run(json.loads(sys.argv[1]),capture_output=True,text=True);'
+                  'print(r.stdout);raise SystemExit(r.returncode)')
+        result = self.command('start', '--offline', '--resume', '--', sys.executable, '-B', '-c', script,
+                              json.dumps(self.argv('--within-turn', 'finish', '--publish', 'calc.py')),
+                              str(self.state / 'lease.json'))
+        self.assertFalse(result['dirty'])
+        self.assertEqual(self.command('check')['phase'], 'idle')
+        state = json.loads((self.state / 'status.json').read_text())
+        self.assertEqual(state['validation']['tree'], self.run_git(self.repo, 'rev-parse', 'HEAD^{tree}'))
+
 
 if __name__ == '__main__':
     unittest.main()

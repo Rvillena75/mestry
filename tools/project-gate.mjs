@@ -10,9 +10,9 @@ function denied(reason = 'PROJECT_GUARD_FAILED') {
 
 export class ProjectGate {
   constructor(root, { python = 'python3', stateRoot = null, offline = false,
-    applyOnEntry = false, timeoutMs = 180000 } = {}) {
+    applyOnEntry = false, timeoutMs = 180000, writerPid = () => null } = {}) {
     this.root = path.resolve(root);
-    this.options = { python, stateRoot, offline, applyOnEntry, timeoutMs };
+    this.options = { python, stateRoot, offline, applyOnEntry, timeoutMs, writerPid };
     this.child = null;
     this.broken = false;
   }
@@ -26,6 +26,8 @@ export class ProjectGate {
     args.push('lease');
     if (options.offline) args.push('--offline');
     if (!options.applyOnEntry) args.push('--observe-only');
+    const writer = options.writerPid();
+    if (Number.isInteger(writer) && writer > 1) args.push('--writer-pid', String(writer));
     const child = spawn(options.python, args, { cwd: this.root, stdio: ['pipe', 'pipe', 'ignore'] });
     this.child = child;
     this.closed = new Promise((resolve) => {
@@ -86,6 +88,7 @@ export class ProjectGate {
 }
 
 export function guardBackend(backend, { root, gate = new ProjectGate(root) } = {}) {
+  if (gate.options) gate.options.writerPid = () => backend.child?.pid ?? null;
   let active = null;
   let closing = null;
   const releaseTurn = async (entry) => {

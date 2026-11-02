@@ -46,3 +46,26 @@ dependencias propias de ARM64. La recepción automática solo podrá aplicar
 cambios desde entradas gestionadas; un escritor que ignore el lock o deje jobs
 separados sigue fuera de la garantía cooperativa. H5 validará reposo, reinicio
 y PC realmente apagado. Drive y las autorizaciones documentales siguen en H4.
+
+## Entorno y primer clon verificados
+
+Horus **1.1.0 / 6**, Alpine **3.24.0**, Python **3.14.8**, Node **24.18.1**,
+npm **11.12.1**, Git **2.54.0**, GitHub CLI **2.97.0**. Codex nativo **0.163.0**
+con `login status=0`. Se confirmó la cuenta GitHub esperada; la API del
+repositorio público declaró lectura/escritura/admin y rama `main`. Esos permisos
+declarados no sustituyen una prueba de push desde el nuevo clon.
+
+La ruta `/workspace/projects/mestry` no existía. Se clonó directamente desde
+GitHub y se comprobó el SHA **`15fa53df2e49b87e83cb1d5481c540038afdef44`**.
+El laboratorio H1 permanece presente. El bridge propio no estaba en ejecución,
+su emparejamiento sí existía y el supervisor conservaba su flag habilitado.
+La identidad Git se configura solo en este clon, con el correo público noreply.
+
+El primer incremento de código pasó **133 tests WSL** y un clon público anónimo
+cotejó **179 archivos**, incluidos sus objetos normalizados, con árbol limpio.
+La siguiente corrección añade cierre desde el propio escritor protegido:
+`--within-turn finish` exige ascendencia y PID/inicio del escritor registrado,
+mantiene la fase exterior running y conserva la nueva evidencia de validación.
+Otro terminal no puede usar esa opción para saltarse el lock. También funciona
+desde el escritor de `start`, sin anidar otro supervisor. La suite vigente
+consta de **136 tests** (54/4/12/13/3/37/9/4); la aceptación ARM64 sigue separada.

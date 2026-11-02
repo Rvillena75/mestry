@@ -72,7 +72,7 @@ def run(args, timeout=35):
 def expected_profile():
     if Path.home() != Path('/home/horus') or os.getuid() != 1000 or platform.machine() != 'aarch64':
         raise ValueError('EXPECTED_HORUS_PROFILE_REQUIRED')
-    if ROOT != Path('/workspace/projects/mestry') or ROOT.is_symlink():
+    if ROOT != Path('/workspace/projects/mestry').resolve() or ROOT.is_symlink():
         raise ValueError('EXPECTED_PROJECT_CHECKOUT_REQUIRED')
 
 

@@ -172,6 +172,15 @@ libre recibe el candidato validado; el trabajo dirty continúa sin sobrescribirl
 El modo inicial de la clase de guardia es observación; la admisión revisada
 activa recepción únicamente en esas entradas gestionadas.
 
+Dentro de un turno protegido o del escritor lanzado por `start`, las pruebas
+directas ya quedan bajo el lock.
+Para un cierre autorizado se usa `sh tools/work-session.sh --within-turn finish
+<rutas>` y, tras revisar, la misma orden con `--publish`. Se comprueban PID,
+inicio del proceso y ascendencia del backend registrado: otro terminal no puede
+tomar prestado el lock con esa opción. El cierre conserva la fase `running`;
+solo el final real del turno libera la propiedad. No se copian credenciales ni
+se incorpora otro servicio. La validación usa exclusivamente metadatos `/proc`.
+
 `s23_project.py verify` valida el clon ARM64 configurado. `activate --head <SHA>
 --review` exige ese HEAD limpio y validado, conserva backups y genera un overlay
 de código sobre la release **existente en el teléfono**, manteniendo cuentas,

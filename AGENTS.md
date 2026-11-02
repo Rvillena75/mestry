@@ -44,6 +44,12 @@ documental de los originales seleccionados según el ADR congelado.
   no abrir otro escritor directo en el mismo checkout. El bridge H3 comparte
   el mismo lock durante cada turno y conserva una recuperación pendiente si
   pierde el control del escritor. No dejar jobs escritores separados al terminar.
+- Dentro de un escritor ya protegido por `start` o el bridge, ejecutar las pruebas directamente;
+  no anidar `start`. Si la publicación está autorizada, usar `work-session.sh
+  --within-turn finish ...` primero como preview y luego con rutas explícitas y
+  `--publish`. Solo se admite desde descendientes del backend registrado;
+  conserva el lock exterior hasta terminar la sesión/turno. Desde terminal independiente,
+  usar `finish` normal después de cerrar el escritor.
 
 ## Pruebas locales sin teléfonos ni inferencia
 
