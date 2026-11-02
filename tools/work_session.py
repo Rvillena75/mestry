@@ -455,6 +455,26 @@ class Session:
             raise Blocked('COMMAND_FAILED_WORK_PRESERVED')
         return {"head": self.text('rev-parse', 'HEAD'), "dirty": bool(self.status()), "phase": "idle"}
 
+    def lease(self, offline=False, observe_only=False):
+        """Hold the same checkout lock for one bridge operation/turn, over stdin."""
+        self.environment()
+        dirty = bool(self.status())
+        if offline:
+            received = {"offline": True, "applied": False}
+        else:
+            received = self.receive(fetch_only=dirty or observe_only)
+        if not dirty and self.state.get('validation', {}).get('tree') != self.text('rev-parse', 'HEAD^{tree}'):
+            self.validate('HEAD')
+        self.record('running', phase='running')
+        print(json.dumps({"state": "LEASE_READY", "head": self.text('rev-parse', 'HEAD'),
+                          "dirty": dirty, "applied": received.get('applied', False)}), flush=True)
+        # EOF is ambiguous: the bridge may have died while Codex is still writing.
+        # Only an explicit terminal acknowledgement clears the persisted phase.
+        if sys.stdin.readline(128) != 'release\n':
+            self.record('lease_abandoned', phase='recovery_required')
+            raise Blocked('UNCLEAN_SESSION_REVIEW_REQUIRED')
+        return {"head": self.text('rev-parse', 'HEAD'), "dirty": bool(self.status())}
+
 
 @contextlib.contextmanager
 def run_foreground(command, root):
@@ -508,6 +528,9 @@ def main():
     start.add_argument('--resume', action='store_true')
     start.add_argument('--offline', action='store_true')
     start.add_argument('command', nargs=argparse.REMAINDER)
+    lease = commands.add_parser('lease', help='Cooperative bridge lock; explicit release on stdin')
+    lease.add_argument('--offline', action='store_true')
+    lease.add_argument('--observe-only', action='store_true')
     end = commands.add_parser('finish')
     end.add_argument('--publish', action='store_true')
     end.add_argument('--message', default='Reviewed MESTRY change')
@@ -532,6 +555,8 @@ def main():
                             result = session.receive(args.fetch_only)
                         elif args.action == 'finish':
                             result = session.finish(args.paths, args.message, args.publish)
+                        elif args.action == 'lease':
+                            result = session.lease(args.offline, args.observe_only)
                         else:
                             command = args.command[1:] if args.command[:1] == ['--'] else args.command
                             result = session.start(command, args.resume, args.offline)

@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import re
 import signal
+import stat
 import subprocess
 import sys
 import time
@@ -87,6 +88,42 @@ def recover(check_health, run_controller):
     return 'recovered' if check_health() else 'starting'
 
 
+def poll_projects():
+    """Optional existing-worker task: fetch references only, never apply files."""
+    config = STATE / 'projects.json'
+    if not config.exists():
+        return None
+    try:
+        info = config.lstat()
+        if not stat.S_ISREG(info.st_mode) or info.st_uid != os.getuid() or info.st_mode & 0o077:
+            raise ValueError('PRIVATE_PROJECT_CONFIG_REQUIRED')
+        value = json.loads(config.read_text())
+        roots = value['projects']
+        if value['schema'] != 1 or not isinstance(roots, list) or not 1 <= len(roots) <= 4:
+            raise ValueError('PROJECT_CONFIG_INVALID')
+        results = []
+        for item in roots:
+            root = Path(item)
+            if not root.is_absolute() or root.is_symlink() or root.resolve() != root:
+                raise ValueError('PROJECT_ROOT_INVALID')
+            runner = root / 'tools/work_session.py'
+            if not runner.is_file() or runner.is_symlink():
+                raise ValueError('PROJECT_RUNNER_REQUIRED')
+            result = subprocess.run([sys.executable, '-B', str(runner), '--repo', str(root),
+                                     'receive', '--fetch-only'], capture_output=True, text=True, timeout=50)
+            response = json.loads(result.stdout.splitlines()[-1])
+            if result.returncode == 0 and response.get('state') == 'OK' and response.get('fetch_only'):
+                results.append({'project': root.name, 'state': 'fetched', 'head': response['head'],
+                                'remote': response['remote'], 'update_pending': response['head'] != response['remote']})
+            else:
+                reason = response.get('reason', '')
+                reason = reason if isinstance(reason, str) and re.fullmatch('[A-Z_0-9]+', reason) else 'FETCH_FAILED'
+                results.append({'project': root.name, 'state': 'deferred' if reason == 'BUSY' else 'blocked', 'reason': reason})
+        return {'state': 'checked', 'projects': results}
+    except Exception:
+        return {'state': 'project_poll_failed_no_private_details'}
+
+
 def worker():
     with (STATE / 'worker.lock').open('a') as lock:
         os.chmod(STATE / 'worker.lock', 0o600)
@@ -101,6 +138,8 @@ def worker():
         signal.signal(signal.SIGTERM, stop_signal)
         signal.signal(signal.SIGINT, stop_signal)
         attempts = 0
+        next_project_poll = 0
+        project_status = None
         try:
             while ENABLED.is_file():
                 try:
@@ -108,8 +147,11 @@ def worker():
                 except Exception:
                     state = 'check_failed_no_raw_output'
                 attempts = 0 if state in {'healthy', 'recovered'} else attempts + 1
+                if time.monotonic() >= next_project_poll:
+                    project_status = poll_projects()
+                    next_project_poll = time.monotonic() + 120
                 private_write(STATUS, {'state': state, 'checked_utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
-                                       'consecutive_failures': attempts})
+                                       'consecutive_failures': attempts, 'project_poll': project_status})
                 time.sleep(30 if attempts < 5 else 300)
         finally:
             if owned_worker() == os.getpid():

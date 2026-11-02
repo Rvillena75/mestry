@@ -48,12 +48,13 @@ not a client written entirely from scratch. See
 
 - Codex runs in Horus/Alpine ARM64 on the S23; remote access from the S25 was
   confirmed by the user after service recovery.
-- **82 local tests** pass: 54 publication/browser/OAuth fixtures, 4 deployment
-  helpers, 8 recovery/network-observation tests, 13 pairing-boundary tests and
-  3 Node policy tests. They do not use real credentials or model inference.
+- **133 offline tests:** 54 publication/browser/OAuth fixtures, 4 deployment
+  helpers, 12 recovery/polling tests, 13 pairing-boundary tests, 3 policy tests,
+  34 Git workflow tests, 9 turn-guard tests and 4 release-overlay tests.
+  They do not use real credentials or model inference.
 - **H2 work sessions:** explicit start/receive/finish/check commands, candidate
   validation, reviewed publication and a local lock covering child writers.
-  An additional 29 integration tests use disposable local Git repositories.
+  Workflow integration tests use disposable local Git repositories.
 - The pinned archive and patch reproduce **68 text files** with matching hashes.
 - Live Drive publication and FolderSync transfer/read-back were separately
   exercised; the offline test suite does not stand in for those device tests.
@@ -76,6 +77,8 @@ python3 -B -m unittest discover -s tools/s23-remote-access -p 'test_*.py'
 python3 -B -m unittest discover -s tools -p test_horus_pair_s25.py
 node --test tools/s25-codex-client/pilot-policy.test.mjs
 python3 -B -m unittest discover -s tools -p test_work_session.py
+node --test tools/project-gate.test.mjs
+python3 -B -m unittest discover -s tools -p test_s23_project.py
 ```
 
 Backend integration tests that import `../src/` belong in the reconstructed
@@ -101,6 +104,11 @@ Start with [current project status](STATUS.md) and the
 use the same WSL checkout in separate turns. Publication selects explicit paths;
 the default finish command previews the candidate without committing or pushing.
 Phone admission and automatic receipt remain H3 work.
+
+H3 adds a bridge turn guard using the same local checkout lock, an optional
+fetch-only task in the existing supervisor, and a device-local release overlay.
+See the [H3 acceptance record](docs/investigaciones/2026-10-26_codex_24x7/15_H3_NODO_S23.md)
+for device verification; code availability alone does not establish deployment.
 
 Use a separate Git clone and platform-local dependencies in each development
 environment. Google Drive remains authoritative for selected original documents;

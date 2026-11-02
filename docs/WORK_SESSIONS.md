@@ -154,4 +154,31 @@ Rollback de H2: dejar de usar los wrappers y conservar commits/archivos locales;
 no borrar dependencias, ramas, credenciales o trabajo pendiente. Cualquier
 reversión de código publicado será otro commit revisado, nunca force push.
 No se añade un coordinador, servicio, cron ni sincronización al apagar Windows.
-H3 implementará recepción/admisión del proyecto real en el S23 por separado.
+La implementación y aceptación H3 se registran por separado en el informe 15.
+
+## Entrada gestionada desde S25 — H3
+
+`project-gate.mjs` integra el bridge existente con el mismo lock local mediante
+`work_session.py lease`. La operación de metadatos de un hilo mantiene el lock
+hasta su respuesta; un turno lo mantiene hasta su notificación terminal con
+thread/turn IDs coincidentes. Un timeout ambiguo o pérdida del proceso padre
+deja recuperación pendiente. No es un coordinador ni mantiene conversaciones
+entre cuentas. Los escritores externos siguen sujetos al procedimiento.
+
+El supervisor existente puede leer una configuración privada `projects.json`
+en su directorio de estado y ejecutar **solo fetch** cada 120 segundos. No aplica
+archivos en segundo plano. Al entrar desde el bridge, un checkout limpio y
+libre recibe el candidato validado; el trabajo dirty continúa sin sobrescribirlo.
+El modo inicial de la clase de guardia es observación; la admisión revisada
+activa recepción únicamente en esas entradas gestionadas.
+
+`s23_project.py verify` valida el clon ARM64 configurado. `activate --head <SHA>
+--review` exige ese HEAD limpio y validado, conserva backups y genera un overlay
+de código sobre la release **existente en el teléfono**, manteniendo cuentas,
+emparejamiento y dependencias locales. No es un instalador genérico: exige el
+perfil y ruta admitidos, y rechaza un bridge activo o configuración previa de
+polling que requiera revisión. No ejecutar por simple prueba local en WSL.
+
+La ruta S25 apunta al proyecto real tras admitirlo. Su asignación documental
+Drive no se amplía automáticamente; H4 conserva ese control por separado.
+La prueba de independencia prolongada del PC permanece en H5.

@@ -317,6 +317,70 @@ class WorkflowIntegration(unittest.TestCase):
         os.utime(clone / name, (1, 1))  # Force status to inspect bytes, not cached stat.
         self.assertEqual(self.run_git(clone, 'status', '--porcelain'), '')
 
+    def open_lease(self, *options):
+        process = subprocess.Popen(self.argv('lease', *options), stdin=subprocess.PIPE,
+                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        self.addCleanup(lambda: process.poll() is None and process.communicate('release\n', timeout=15))
+        ready = json.loads(process.stdout.readline())
+        self.assertEqual(ready['state'], 'LEASE_READY', ready)
+        return process, ready
+
+    def test_bridge_lease_blocks_receive_until_explicit_release(self):
+        process, _ = self.open_lease('--offline')
+        self.command('receive', blocked='BUSY')
+        self.write('NOTES.md', 'Bridge fixture work\n')
+        out, err = process.communicate('release\n', timeout=15)
+        self.assertEqual(process.returncode, 0, (out, err))
+        self.assertEqual(self.command('check')['phase'], 'idle')
+        self.assertEqual((self.repo / 'NOTES.md').read_text(), 'Bridge fixture work\n')
+
+    def test_bridge_lost_parent_requires_recovery(self):
+        process, _ = self.open_lease('--offline')
+        process.communicate('', timeout=15)
+        self.assertEqual(process.returncode, 3)
+        self.command('receive', blocked='UNCLEAN_SESSION_REVIEW_REQUIRED')
+
+    def test_bridge_admission_receives_validated_candidate(self):
+        expected = self.peer_commit()
+        process, ready = self.open_lease()
+        self.assertTrue(ready['applied'])
+        self.assertEqual(self.head(), expected)
+        process.communicate('release\n', timeout=15)
+        self.assertEqual(process.returncode, 0)
+
+    def test_bridge_admission_preserves_dirty_local_work(self):
+        original = self.head()
+        self.peer_commit()
+        self.write('NOTES.md', 'Unpublished fixture\n')
+        process, ready = self.open_lease()
+        self.assertTrue(ready['dirty'])
+        self.assertFalse(ready['applied'])
+        self.assertEqual(self.head(), original)
+        process.communicate('release\n', timeout=15)
+        self.assertEqual(process.returncode, 0)
+
+    def test_node_gate_uses_real_python_checkout_lock(self):
+        tools = self.repo / 'tools'
+        tools.mkdir()
+        for name in ('work_session.py', 'check_env.py'):
+            (tools / name).symlink_to(CONTROLLER.with_name(name))
+        module = CONTROLLER.with_name('project-gate.mjs').as_uri()
+        script = ('import {ProjectGate} from ' + json.dumps(module) + ';'
+                  'const gate=new ProjectGate(process.argv[1], {stateRoot:process.argv[2],offline:true});'
+                  'await gate.acquire(); console.log("NODE_GATE_READY");'
+                  'process.stdin.resume(); await new Promise(r=>process.stdin.once("data",r));'
+                  'await gate.release();process.stdin.pause();')
+        process = subprocess.Popen(['node', '--input-type=module', '-e', script, str(self.repo), str(self.storage)],
+                                   stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        try:
+            self.assertEqual(process.stdout.readline().strip(), 'NODE_GATE_READY')
+            self.command('receive', blocked='BUSY')
+            out, err = process.communicate('release\n', timeout=15)
+            self.assertEqual(process.returncode, 0, (out, err))
+        finally:
+            if process.poll() is None:
+                process.communicate('release\n', timeout=15)
+
 
 if __name__ == '__main__':
     unittest.main()

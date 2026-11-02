@@ -9,7 +9,7 @@ documental de los originales seleccionados según el ADR congelado.
 ## Antes de trabajar
 
 1. Leer `STATUS.md`, `docs/WORK_SESSIONS.md`, `README.md`,
-   `docs/GITHUB_PUBLICATION.md` y los informes 09–14 de
+   `docs/GITHUB_PUBLICATION.md` y los informes 09–15 de
    `docs/investigaciones/2026-10-26_codex_24x7/`.
 2. Revisar `git status` y los commits recientes; conservar cambios locales.
    No ejecutar reset, clean, stash, pull, checkout ni rebase automáticamente
@@ -39,6 +39,11 @@ documental de los originales seleccionados según el ADR congelado.
   turnos, con homes separados. `finish <rutas>` solo previsualiza; `--publish`
   requiere un conjunto revisado y autorización aplicable. No reaprobar una
   política cambiada automáticamente para sortear un bloqueo.
+- En S23, el checkout de continuidad utiliza el perfil `/home/horus`, mediante
+  Bare terminal/SSH y su launcher existente. Usar el wrapper también para tests;
+  no abrir otro escritor directo en el mismo checkout. El bridge H3 comparte
+  el mismo lock durante cada turno y conserva una recuperación pendiente si
+  pierde el control del escritor. No dejar jobs escritores separados al terminar.
 
 ## Pruebas locales sin teléfonos ni inferencia
 
@@ -49,6 +54,8 @@ python3 -B -m unittest discover -s tools/s23-remote-access -p 'test_*.py'
 python3 -B -m unittest discover -s tools -p test_horus_pair_s25.py
 node --test tools/s25-codex-client/pilot-policy.test.mjs
 python3 -B -m unittest discover -s tools -p test_work_session.py
+node --test tools/project-gate.test.mjs
+python3 -B -m unittest discover -s tools -p test_s23_project.py
 ```
 
 Las pruebas de integración Node que importan `../src/` se ejecutan dentro del
@@ -58,4 +65,5 @@ solo para resolver un import fuera de ese árbol.
 
 Al finalizar una tarea, documentar cambios, pruebas, problemas y siguiente paso
 en la documentación existente, sin transcribir conversaciones. La publicación
-inicial y H2 no instalan sincronización automática Windows/S23. H3 sigue pendiente.
+inicial y H2 no instalan sincronización automática Windows/S23. Consultar el
+informe 15 para la admisión real y los límites de H3; no inferirlos del código.
