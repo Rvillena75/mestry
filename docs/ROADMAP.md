@@ -1,5 +1,31 @@
 # Roadmap condicionado por evidencia
 
+## Seguimiento vigente — 02/11/2026
+
+El plan de continuidad actual es **H0–H5 del informe 09**, actualizado por el
+cierre H0, sus correcciones y la publicación pública posterior de MESTRY.
+[Revisión por etapas y siguiente incremento](investigaciones/2026-10-26_codex_24x7/12_REVISION_PLAN_IMPLEMENTACION.md).
+
+- **H0:** cerrada históricamente; Horus se reabrió normalmente para H1 y se
+  revalidaron el perfil, GitHub y ejecución ARM64. No se repitió la auditoría.
+- **H1:** [validada técnicamente](investigaciones/2026-10-26_codex_24x7/13_H1_LABORATORIO_CONTINUIDAD.md):
+  ida/vuelta GitHub WSL/S23, SHA final común, ocho tests por target, catorce
+  escenarios WSL y dos guardas en S23. Sin inferencia de agentes reales.
+- **H2:** flujo local implementado, con validación candidata, bloqueo durante
+  descendientes, publicación explícita, estado privado y detector de cambios de
+  dependencias. [Uso](WORK_SESSIONS.md) y
+  [aceptación H2](investigaciones/2026-10-26_codex_24x7/14_H2_FLUJO_TRABAJO.md).
+- **H3:** pendiente clon operativo del MESTRY real en S23, recepción/publicación segura y admisión
+  del proyecto real en S25. Publicar en GitHub no acredita recibir en el teléfono.
+- **H4/H5:** componentes documentales y de supervisión parciales; faltan
+  recuperación/autoridades completas y ensayos sin PC/reposo/24 h.
+
+Los apartados siguientes conservan cronología y propuestas anteriores. Sus
+pendientes ya resueltos no deben repetirse, y los componentes de transferencia
+de conversaciones de la propuesta D no forman parte del requisito vigente.
+
+## Registro histórico de propuestas y experimentos
+
 **Prioridad vigente — app Android S25:** diagnóstico app-server/Codex 0.163.0/cuenta ChatGPT desde S25 PASS sin inferencia; APK personal preparado, compilado y firma comprobada; 57 pruebas locales correctas. El usuario aprobó los puertos del piloto. Instalación S25, bind real del túnel, tarea desde la app, aprobación/interrupción y reconexión siguen pendientes; se pidió conectar S25 por USB. Después, prueba física con PC apagado y reposo de más de 15 minutos. Primer proyecto/documento real solicitado, todavía sin ampliar el publicador. [Preparación y aceptación](../tools/s25-codex-client/README.md).
 
 **Piloto de publicación y OAuth de producción PASS:** cuenta/scope y renovación nativa S23; cliente Horus y clave limitada; dos versiones Drive, retry sin duplicado, no sobrescritura y lectura S25 verificados. Google Auth Platform está en producción por confirmación del usuario, inicio/privacidad publicados en HTTPS, nuevo consentimiento y refresh real comprobados con copias privadas conservadas. [Uso y límites](HORUS_DRIVE_PUBLISH.md). Continuidad superior a siete días por comprobar desde el 29 de octubre; estar en producción no garantiza tokens permanentes. No repetir OAuth inicial, carpeta o claves ya instaladas. Corpus y comentarios no forman parte de esta aceptación.

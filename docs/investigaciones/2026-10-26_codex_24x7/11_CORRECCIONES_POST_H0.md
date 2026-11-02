@@ -1,6 +1,6 @@
 # MESTRY — Correcciones posteriores a H0
 
-Fecha: **27/10/2026**, America/Santiago, UTC−03:00. Continuación del [cierre H0](DRIVE_ID_01_EXAMPLE.md), sin modificar ese registro histórico ni el ADR congelado.
+Fecha: **27/10/2026**, America/Santiago, UTC−03:00. Continuación del [cierre H0](10_CIERRE_H0_VERIFICACION_REAL.md), sin modificar ese registro histórico ni el ADR congelado.
 
 ## Resultado de la intervención
 

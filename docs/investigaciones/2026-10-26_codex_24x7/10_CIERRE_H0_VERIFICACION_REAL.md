@@ -418,7 +418,7 @@ No se accedió a documentos personales no autorizados ni se repitió la auditor�
 
 ### I.3. Archivos modificados y control documental
 
-**Único archivo nuevo del workspace:** `docs/investigaciones/2026-10-26_codex_24x7/DRIVE_ID_01_EXAMPLE.md`.
+**Único archivo nuevo del workspace:** `docs/investigaciones/2026-10-26_codex_24x7/10_CIERRE_H0_VERIFICACION_REAL.md`.
 
 Línea base de H0, antes de este informe: **1.816 archivos regulares, 66.430.452 bytes**, SHA-256 agregado **`2296462f68e92cf7906cb478dff9b611abc1befe939a24f52dbffcc779b3ae26`**. Incluye el informe 09 ya existente. Algoritmo: archivos regulares excluyendo symlinks, ordenar con **`sorted(root.rglob('*'))` (orden de componentes de `pathlib.Path`)**, siendo `root=Path('/home/developer/proyectos/mestry')`; concatenar para cada uno `ruta relativa + NUL + SHA256(bytes).hexdigest() + LF` en UTF-8 y calcular SHA-256 del conjunto. El cierre coteja todo el árbol excluyendo únicamente este nuevo informe. Un primer cotejo ordenó cadenas completas y dio otra huella con igual conteo/tamaño; al usar el orden Path de la línea base coincidió exactamente, sin cambios de contenido.
 

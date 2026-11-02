@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "project": "mestry",
+  "remote": "https://github.com/Rvillena75/mestry.git",
+  "branch": "main",
+  "targets": ["wsl-x86_64"],
+  "requirements": {"python": "3.12", "git": "2.43", "node": "22.0"},
+  "dependency_inputs": ["tools/horus_publish/requirements.txt", "tools/s25-codex-client/source-pins.json"],
+  "pinned_patch": {"pins": "tools/s25-codex-client/source-pins.json", "patch": "tools/s25-codex-client/mestry-pilot1.patch"},
+  "allowed_files": ["README.md", "AGENTS.md", "STATUS.md", "THIRD_PARTY_NOTICES.md", ".gitignore", ".gitattributes", ".mestry-workflow.json", "MESTRY_Arquitectura_Congelada_Google_Drive_Sincronizacion_RAG.md"],
+  "allowed_prefixes": ["tools/", "docs/", "LICENSES/"],
+  "protected_files": [".mestry-workflow.json", ".gitignore", ".gitattributes", "AGENTS.md", "MESTRY_Arquitectura_Congelada_Google_Drive_Sincronizacion_RAG.md", "tools/work_session.py", "tools/check_env.py", "tools/work-session.sh", "tools/check-env.sh", "tools/WorkSession.ps1", "tools/test_work_session.py"],
+  "max_file_bytes": 3000000,
+  "validation": [
+    {"name": "publisher", "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tools/horus_publish", "-p", "test_*.py"], "minimum_tests": 54},
+    {"name": "helpers", "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tools/s25-codex-client", "-p", "test_helpers.py"], "minimum_tests": 4},
+    {"name": "remote", "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tools/s23-remote-access", "-p", "test_*.py"], "minimum_tests": 8},
+    {"name": "pairing", "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tools", "-p", "test_horus_pair_s25.py"], "minimum_tests": 13},
+    {"name": "policy", "argv": ["node", "--test", "tools/s25-codex-client/pilot-policy.test.mjs"], "minimum_tests": 3},
+    {"name": "workflow", "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tools", "-p", "test_work_session.py"], "minimum_tests": 28}
+  ]
+}

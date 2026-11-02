@@ -8,8 +8,8 @@ documental de los originales seleccionados según el ADR congelado.
 
 ## Antes de trabajar
 
-1. Leer el estado actual al principio de `README.md`,
-   `docs/GITHUB_PUBLICATION.md` y los informes 09, 10 y 11 de
+1. Leer `STATUS.md`, `docs/WORK_SESSIONS.md`, `README.md`,
+   `docs/GITHUB_PUBLICATION.md` y los informes 09–14 de
    `docs/investigaciones/2026-10-26_codex_24x7/`.
 2. Revisar `git status` y los commits recientes; conservar cambios locales.
    No ejecutar reset, clean, stash, pull, checkout ni rebase automáticamente
@@ -34,6 +34,11 @@ documental de los originales seleccionados según el ADR congelado.
   No desplegar esta copia sobre la instalación existente como parte de un test.
 - Revisar archivos y pruebas antes de confirmar/publicar. No convertir todo
   cambio detectado en un commit automático. No usar force push.
+- Usar `sh tools/work-session.sh start -- <launcher existente>` para mantener
+  el bloqueo durante escritura/pruebas. Dos cuentas usan el mismo checkout por
+  turnos, con homes separados. `finish <rutas>` solo previsualiza; `--publish`
+  requiere un conjunto revisado y autorización aplicable. No reaprobar una
+  política cambiada automáticamente para sortear un bloqueo.
 
 ## Pruebas locales sin teléfonos ni inferencia
 
@@ -43,6 +48,7 @@ python3 -B -m unittest discover -s tools/s25-codex-client -p test_helpers.py
 python3 -B -m unittest discover -s tools/s23-remote-access -p 'test_*.py'
 python3 -B -m unittest discover -s tools -p test_horus_pair_s25.py
 node --test tools/s25-codex-client/pilot-policy.test.mjs
+python3 -B -m unittest discover -s tools -p test_work_session.py
 ```
 
 Las pruebas de integración Node que importan `../src/` se ejecutan dentro del
@@ -52,4 +58,4 @@ solo para resolver un import fuera de ese árbol.
 
 Al finalizar una tarea, documentar cambios, pruebas, problemas y siguiente paso
 en la documentación existente, sin transcribir conversaciones. La publicación
-inicial no instala sincronización automática Windows/S23.
+inicial y H2 no instalan sincronización automática Windows/S23. H3 sigue pendiente.

@@ -51,6 +51,9 @@ not a client written entirely from scratch. See
 - **82 local tests** pass: 54 publication/browser/OAuth fixtures, 4 deployment
   helpers, 8 recovery/network-observation tests, 13 pairing-boundary tests and
   3 Node policy tests. They do not use real credentials or model inference.
+- **H2 work sessions:** explicit start/receive/finish/check commands, candidate
+  validation, reviewed publication and a local lock covering child writers.
+  An additional 28 integration tests use disposable local Git repositories.
 - The pinned archive and patch reproduce **68 text files** with matching hashes.
 - Live Drive publication and FolderSync transfer/read-back were separately
   exercised; the offline test suite does not stand in for those device tests.
@@ -72,6 +75,7 @@ python3 -B -m unittest discover -s tools/s25-codex-client -p test_helpers.py
 python3 -B -m unittest discover -s tools/s23-remote-access -p 'test_*.py'
 python3 -B -m unittest discover -s tools -p test_horus_pair_s25.py
 node --test tools/s25-codex-client/pilot-policy.test.mjs
+python3 -B -m unittest discover -s tools -p test_work_session.py
 ```
 
 Backend integration tests that import `../src/` belong in the reconstructed
@@ -91,6 +95,12 @@ and [source pins](tools/s25-codex-client/source-pins.json).
 | `AGENTS.md` | Instructions for continuing work from files and evidence |
 
 ## Current direction
+
+Start with [current project status](STATUS.md) and the
+[H2 session guide](docs/WORK_SESSIONS.md). Both independent Codex accounts can
+use the same WSL checkout in separate turns. Publication selects explicit paths;
+the default finish command previews the candidate without committing or pushing.
+Phone admission and automatic receipt remain H3 work.
 
 Use a separate Git clone and platform-local dependencies in each development
 environment. Google Drive remains authoritative for selected original documents;
