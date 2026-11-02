@@ -16,9 +16,9 @@
     {"name": "helpers", "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tools/s25-codex-client", "-p", "test_helpers.py"], "minimum_tests": 4},
     {"name": "remote", "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tools/s23-remote-access", "-p", "test_*.py"], "minimum_tests": 12},
     {"name": "pairing", "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tools", "-p", "test_horus_pair_s25.py"], "minimum_tests": 13},
-    {"name": "policy", "argv": ["node", "--test", "tools/s25-codex-client/pilot-policy.test.mjs"], "minimum_tests": 3},
-    {"name": "workflow", "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tools", "-p", "test_work_session.py"], "minimum_tests": 37},
-    {"name": "project-gate", "argv": ["node", "--test", "tools/project-gate.test.mjs"], "minimum_tests": 9},
+    {"name": "policy", "argv": ["node", "--test", "--test-reporter=tap", "tools/s25-codex-client/pilot-policy.test.mjs"], "minimum_tests": 3},
+    {"name": "workflow", "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tools", "-p", "test_work_session.py"], "minimum_tests": 38},
+    {"name": "project-gate", "argv": ["node", "--test", "--test-reporter=tap", "tools/project-gate.test.mjs"], "minimum_tests": 9},
     {"name": "release-overlay", "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tools", "-p", "test_s23_project.py"], "minimum_tests": 4}
   ]
 }

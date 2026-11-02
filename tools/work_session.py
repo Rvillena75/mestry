@@ -393,6 +393,8 @@ class Session:
             raise Blocked("DUPLICATE_PATH")
         for name in paths:
             self.permitted(name)
+            if (self.root / name).is_dir():
+                raise Blocked('DIRECTORY_SELECTION_NOT_ADMITTED')
         staged = set(self.text('diff', '--cached', '--name-only').splitlines())
         if not staged.issubset(paths):
             raise Blocked("PREEXISTING_INDEX_NOT_SELECTED")
@@ -407,15 +409,24 @@ class Session:
         index_path = Path(self.text('rev-parse', '--git-path', 'index'))
         if not index_path.is_absolute():
             index_path = self.root / index_path
+        index_info = index_path.stat()
         original_index = index_path.read_bytes()
         selected = {p: digest((self.root / p).read_bytes()) if (self.root / p).is_file() and not (self.root / p).is_symlink() else None for p in paths}
         with tempfile.TemporaryDirectory(prefix='index-', dir=self.directory) as temp:
             index = Path(temp) / 'index'
             index.write_bytes(original_index)
+            # Git's racy-clean detection compares cached file mtimes to the
+            # index mtime. A newly timestamped copy can hide equal-size edits.
+            os.utime(index, ns=(index_info.st_atime_ns, index_info.st_mtime_ns))
             env = {'GIT_INDEX_FILE': str(index)}
             if paths:
                 self.git('add', '--', *paths, env=env)
             tree = self.text('write-tree', env=env)
+            for name in paths:
+                actual = self.text('rev-parse', '--verify', tree + ':' + name, accept=(0, 128))
+                expected = self.text('hash-object', '--path=' + name, '--', name) if (self.root / name).is_file() else ''
+                if actual != expected:
+                    raise Blocked('SELECTED_CONTENT_NOT_STAGED')
             self.inspect_tree(tree)
             changed = self.text('diff', '--cached', '--name-only', env=env).splitlines()
             plan = {"selected": sorted(paths), "candidate_tree": tree, "changed": changed,

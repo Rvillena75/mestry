@@ -48,9 +48,9 @@ not a client written entirely from scratch. See
 
 - Codex runs in Horus/Alpine ARM64 on the S23; remote access from the S25 was
   confirmed by the user after service recovery.
-- **136 offline tests:** 54 publication/browser/OAuth fixtures, 4 deployment
+- **137 offline tests:** 54 publication/browser/OAuth fixtures, 4 deployment
   helpers, 12 recovery/polling tests, 13 pairing-boundary tests, 3 policy tests,
-  37 Git workflow tests, 9 turn-guard tests and 4 release-overlay tests.
+  38 Git workflow tests, 9 turn-guard tests and 4 release-overlay tests.
   They do not use real credentials or model inference.
 - **H2 work sessions:** explicit start/receive/finish/check commands, candidate
   validation, reviewed publication and a local lock covering child writers.

@@ -429,6 +429,22 @@ class WorkflowIntegration(unittest.TestCase):
         state = json.loads((self.state / 'status.json').read_text())
         self.assertEqual(state['validation']['tree'], self.run_git(self.repo, 'rev-parse', 'HEAD^{tree}'))
 
+    def test_preview_preserves_racy_index_detection(self):
+        # Simulate equal-size edits within one filesystem timestamp quantum.
+        self.run_git(self.repo, 'config', 'core.trustctime', 'false')
+        stamp = 1600000000000000000
+        calc = self.repo / 'calc.py'
+        os.utime(calc, ns=(stamp, stamp))
+        self.run_git(self.repo, 'add', 'calc.py')
+        index = self.repo / '.git/index'
+        os.utime(index, ns=(stamp, stamp))
+        self.write('calc.py', 'VALUE = 8\n')
+        os.utime(calc, ns=(stamp, stamp))
+        before = self.index()
+        result = self.command('finish', 'calc.py')
+        self.assertEqual(result['plan']['changed'], ['calc.py'])
+        self.assertEqual(self.index(), before)
+
 
 if __name__ == '__main__':
     unittest.main()

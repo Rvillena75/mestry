@@ -77,3 +77,14 @@ home externo con `unittest.mock`, antes de llamar a los guards de instalación y
 upgrade. Los fixtures no deben inspeccionar la instalación real para probar un
 rechazo. No se desactivó ni saltó ninguna prueba; se conservan cuatro helpers y
 las ocho suites. El rechazo ocurrió antes de activar el nuevo bridge.
+
+Una comprobación repetida del cierre desde el propio escritor detectó un falso
+"sin cambios" al copiar el índice a un archivo con mtime nuevo. Se reprodujo
+determinísticamente con un cambio del mismo tamaño y timestamps iguales. Git
+usa el mtime del índice para decidir cuándo debe releer contenido potencialmente
+ambiguo ([documentación oficial sobre racy Git](https://git-scm.com/docs/racy-git)).
+Se conserva ahora el timestamp del índice copiado y se verifica, por contenido
+normalizado con Git, cada ruta seleccionada antes de aceptar el candidato.
+Los cambios del ensayo anterior quedaron locales; no se descartaron ni se
+reescribieron commits remotos. La suite incorpora ese caso sin relajar los
+guards: **137 tests** (54/4/12/13/3/38/9/4).
