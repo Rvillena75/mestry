@@ -13,7 +13,7 @@ por checkout. Las dos cuentas conservan credenciales/historiales independientes
 y comparten archivos por turnos. `finish` previsualiza; publicar requiere rutas
 explícitas revisadas y `--publish` dentro del alcance autorizado.
 
-**110 tests correctos**: 82 existentes y 28 pruebas de integración H2. El archivo
+**111 tests correctos**: 82 existentes y 29 pruebas de integración H2. El archivo
 upstream fijado y el parche íntegro reproducen los **68 hashes de texto**. No se
 ejecutó upstream ni se descargó/verificó otra vez el wrapper binario de Gradle.
 La admisión automática del MESTRY real en S23/S25, paquetes ARM64 y operación
@@ -33,7 +33,7 @@ es [`STATUS.md`](../../../STATUS.md).
 | `tools/work-session.sh` | Entrada Bash/POSIX, mismo cwd y código de salida |
 | `tools/check_env.py`, `tools/check-env.sh` | Versiones, target, huella de dependencias y pin del parche; nunca instala |
 | `tools/WorkSession.ps1` | Acceso opcional desde Windows a WSL mediante argumentos separados |
-| `tools/test_work_session.py` | 28 ensayos con clones y remotos bare temporales locales |
+| `tools/test_work_session.py` | 29 ensayos con clones y remotos bare temporales locales |
 | `STATUS.md`, `docs/WORK_SESSIONS.md` | Estado verificable y operación por otros agentes |
 | `README.md`, `AGENTS.md`, `docs/ROADMAP.md` | Entrada y continuidad del proyecto |
 
@@ -100,7 +100,7 @@ sh -n tools/work-session.sh tools/check-env.sh
 python3 -B tools/check_env.py
 ```
 
-Resultados por suite: **54 / 4 / 8 / 13 / 3 / 28**, todos correctos. La
+Resultados por suite: **54 / 4 / 8 / 13 / 3 / 29**, todos correctos. La
 reproducción adicional verificó el SHA del archivo cacheado, el SHA del parche,
 extracción segura, aplicación en un temporal nuevo y los 68 hashes; cero
 descargas/instalaciones/ejecución upstream. El pin del parche permanece
@@ -180,9 +180,10 @@ posterior devolvió `applied=false`, conservando el mismo SHA. No hubo inferenci
 Un clon público independiente, sin configuración global/sistema ni helper de
 credenciales, descargó ese commit y cotejó **174 archivos idénticos byte a byte**
 con el clon de trabajo; su `git status` estaba limpio. La primera comprobación
-anónima no conservó diagnóstico de una aserción fallida; se repitió con estados
-explícitos, ambos limpios (configuración heredada y aislada). No se atribuye
-una causa no demostrada a ese primer resultado.
+anónima no conservó diagnóstico de una aserción fallida. Una descarga posterior
+mostró estados limpios, pero la revisión final forzó la inspección de bytes y
+localizó el problema de normalización descrito a continuación. El status basado
+solo en metadatos no bastaba para acreditar un clon reproducible.
 
 Este cierre documental se publica en un commit posterior normal, conservando
 el commit de implementación como evidencia estable. La referencia final se
@@ -196,3 +197,25 @@ incremento, no una prueba fallida de continuidad: la ida/vuelta ARM64 del
 laboratorio quedó acreditada en H1. No se necesitan permisos adicionales para
 usar los comandos WSL ya implementados; modificar teléfonos o sincronizadores
 permanece sujeto al alcance y validación específicos del próximo incremento.
+
+
+### Corrección detectada en la descarga pública final
+
+La comprobación del commit documental `6fa747fc36c24adfe975cdefd0d589619853ce3d`
+obtuvo los 174 archivos idénticos, pero Git marcó dos fixtures exportados de
+`04-front-matter-relativos` como modificados. Cada uno conservaba 17 finales
+CRLF. El blob y el archivo compartían bytes, pero `git hash-object --path=...`
+normalizaba a otro objeto por la regla general Markdown de `.gitattributes`.
+La discrepancia podía quedar temporalmente oculta por la caché de metadatos.
+
+Se revisaron los 174 archivos con cálculo de normalización, localizando solo
+esos dos casos. Se añadió una excepción de atributos para `fixtures` y
+`readback` bajo `docs/validation`: conservar bytes con `-text -eol`. No se
+reescribieron los fixtures, sus hashes ni el parche fijado. La nueva prueba
+crea un fixture CRLF, publica en un remoto sintético, clona, compara bytes y
+objeto normalizado, altera solo mtime para forzar inspección y exige status
+limpio. Pasaron **29 tests H2**; total de aceptación vigente **111**.
+
+Los atributos, el test y el mínimo del contrato se revisaron y reaprobaron
+explícitamente. La publicación correctiva usa el mismo cierre candidato normal;
+la descarga final comprueba además cada blob normalizado, no solo status.

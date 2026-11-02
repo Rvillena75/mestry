@@ -33,10 +33,11 @@ class WorkflowIntegration(unittest.TestCase):
         self.write('NOTES.md', 'Local notes\n')
         self.write('dependency.txt', 'v1\n')
         self.write('.gitignore', '.env\n*.tmp\n__pycache__/\n')
+        self.write('.gitattributes', (CONTROLLER.parent.parent / '.gitattributes').read_text())
         contract = {'schema': 1, 'project': 'fixture', 'remote': str(self.remote),
                     'branch': 'main', 'targets': [check_env.target()],
                     'requirements': {'python': '3.12'}, 'dependency_inputs': ['dependency.txt'],
-                    'allowed_files': ['calc.py', 'test_calc.py', 'README.md', 'NOTES.md', 'dependency.txt', '.gitignore', '.mestry-workflow.json'],
+                    'allowed_files': ['calc.py', 'test_calc.py', 'README.md', 'NOTES.md', 'dependency.txt', '.gitignore', '.gitattributes', '.mestry-workflow.json'],
                     'allowed_prefixes': ['docs/'], 'protected_files': ['.mestry-workflow.json'],
                     'validation': [{'name': 'fixture', 'argv': [sys.executable, '-B', '-m', 'unittest', 'discover', '-p', 'test_calc.py'], 'minimum_tests': 1}]}
         self.write('.mestry-workflow.json', json.dumps(contract))
@@ -299,6 +300,22 @@ class WorkflowIntegration(unittest.TestCase):
                                     env=dict(os.environ, CODEX_HOME=str(home), EXPECTED_PROFILE=home.name), capture_output=True, timeout=20)
             self.assertEqual(result.returncode, 0, result.stdout.decode())
         self.assertNotEqual(*homes)
+
+
+    def test_public_fixture_preserves_crlf_in_clean_clone(self):
+        name = 'docs/validation/h2-fixture/fixtures/literal.md'
+        path = self.repo / name
+        path.parent.mkdir(parents=True)
+        original = b'title\r\nbody\r\n'
+        path.write_bytes(original)
+        self.command('finish', '--publish', name)
+        clone = self.base / 'public-copy'
+        self.run_git(self.base, 'clone', str(self.remote), str(clone))
+        self.assertEqual((clone / name).read_bytes(), original)
+        blob = self.run_git(clone, 'rev-parse', 'HEAD:' + name)
+        self.assertEqual(self.run_git(clone, 'hash-object', '--path=' + name, name), blob)
+        os.utime(clone / name, (1, 1))  # Force status to inspect bytes, not cached stat.
+        self.assertEqual(self.run_git(clone, 'status', '--porcelain'), '')
 
 
 if __name__ == '__main__':

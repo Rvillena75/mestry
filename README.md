@@ -53,7 +53,7 @@ not a client written entirely from scratch. See
   3 Node policy tests. They do not use real credentials or model inference.
 - **H2 work sessions:** explicit start/receive/finish/check commands, candidate
   validation, reviewed publication and a local lock covering child writers.
-  An additional 28 integration tests use disposable local Git repositories.
+  An additional 29 integration tests use disposable local Git repositories.
 - The pinned archive and patch reproduce **68 text files** with matching hashes.
 - Live Drive publication and FolderSync transfer/read-back were separately
   exercised; the offline test suite does not stand in for those device tests.

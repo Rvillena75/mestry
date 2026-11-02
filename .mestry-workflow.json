@@ -17,6 +17,6 @@
     {"name": "remote", "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tools/s23-remote-access", "-p", "test_*.py"], "minimum_tests": 8},
     {"name": "pairing", "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tools", "-p", "test_horus_pair_s25.py"], "minimum_tests": 13},
     {"name": "policy", "argv": ["node", "--test", "tools/s25-codex-client/pilot-policy.test.mjs"], "minimum_tests": 3},
-    {"name": "workflow", "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tools", "-p", "test_work_session.py"], "minimum_tests": 28}
+    {"name": "workflow", "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tools", "-p", "test_work_session.py"], "minimum_tests": 29}
   ]
 }

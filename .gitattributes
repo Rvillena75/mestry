@@ -2,3 +2,6 @@
 * text=auto eol=lf
 *.patch -text whitespace=-blank-at-eol
 *.md text eol=lf whitespace=-blank-at-eol
+# Published fixtures/read-back exports retain their original bytes, including CRLF.
+docs/validation/**/fixtures/** -text -eol
+docs/validation/**/readback/** -text -eol

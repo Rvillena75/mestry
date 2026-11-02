@@ -16,7 +16,7 @@ repositorio. Originales seleccionados: Google Drive según el ADR congelado.
 - **H4/H5:** autoridad/recuperación documental y ensayos prolongados pendientes;
   GitHub disponible no demuestra recepción S23 ni disponibilidad 24/7.
 
-La validación H2 pasó **110 tests** y reprodujo los **68 hashes** del parche.
+La validación H2 pasó **111 tests** y reprodujo los **68 hashes** del parche.
 Usa fixtures Git locales y las suites offline existentes. No
 instala paquetes ni ejecuta inferencia, servicios o sincronizadores. El wrapper
 mantiene bloqueo durante los descendientes del comando; escritores que ignoren
