@@ -95,3 +95,10 @@ del harness: esperaba la salida del stager en 5 s, mientras ese helper permite
 PRoot se observó ese recorrido. El test espera ahora hasta 15 s y mantiene las
 comprobaciones de salida 0, túnel hijo cerrado, una descarga y puerto cerrado.
 No se cambió el comportamiento ni el límite productivo del helper.
+
+La suite Git real en Alpine pasó sus **38 pruebas en 305,861 s**. El límite
+general de 120 s rechazaba un candidato correcto. El contrato revisado asigna
+600 s a esa suite; las otras conservan 120 s. La preparación del bridge admite
+hasta 900 s para la validación completa, antes de iniciar el escritor. Se
+mantienen todos los tests, el bloqueo y el rechazo de candidatos fallidos; no
+se omiten pruebas ni se aplica una actualización antes de validarla.

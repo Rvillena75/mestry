@@ -328,7 +328,8 @@ class Session:
             results = []
             for rule in self.contract["validation"]:
                 try:
-                    result = subprocess.run(rule["argv"], cwd=destination, capture_output=True, timeout=120)
+                    result = subprocess.run(rule["argv"], cwd=destination, capture_output=True,
+                                            timeout=rule.get("timeout_seconds", 120))
                 except subprocess.TimeoutExpired:
                     self.record('validation_failed', failed_candidate={
                         'at': now(), 'tree': self.text('rev-parse', revision + '^{tree}'),

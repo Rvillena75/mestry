@@ -10,7 +10,7 @@ function denied(reason = 'PROJECT_GUARD_FAILED') {
 
 export class ProjectGate {
   constructor(root, { python = 'python3', stateRoot = null, offline = false,
-    applyOnEntry = false, timeoutMs = 180000, writerPid = () => null } = {}) {
+    applyOnEntry = false, timeoutMs = 900000, writerPid = () => null } = {}) {
     this.root = path.resolve(root);
     this.options = { python, stateRoot, offline, applyOnEntry, timeoutMs, writerPid };
     this.child = null;
