@@ -9,6 +9,7 @@ import platform
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 
 from work_session import Session, Blocked, digest, now, private_dir, write_private
@@ -96,8 +97,8 @@ def activate(head):
     home = Path.home()
     state = home / '.local/state/mestry-s25-client'
     base = home / '.local/lib/mestry-s25-pilot'
-    keeper = home / '.local/bin/mestry-keepalive'
     keeper_source = home / '.local/lib/mestry-keepalive/horus_keepalive.py'
+    keeper_command = [sys.executable, str(keeper_source)]
     with session.lock():
         session.environment()
         if session.text('rev-parse', 'HEAD') != head or session.status():
@@ -121,17 +122,17 @@ def activate(head):
         config = home / '.local/state/mestry-keepalive/projects.json'
         if config.exists():
             raise ValueError('EXISTING_PROJECT_POLL_CONFIG_REQUIRES_REVIEW')
-        keeper_status = json.loads(run([str(keeper), 'status']))
+        keeper_status = json.loads(run([*keeper_command, 'status']))
         with tempfile.TemporaryDirectory(prefix='h3-overlay-', dir=base) as temporary:
             source = Path(temporary) / 'release'
             manifest_sha = compose_release(previous, source, ROOT)
             if keeper_status.get('worker_running'):
-                run([str(keeper), 'stop'])
+                run([*keeper_command, 'stop'])
             try:
                 upgrade.upgrade(source)
                 upgrade.atomic_write(keeper_source, (ROOT / 'tools/s23-remote-access/horus_keepalive.py').read_bytes(), 0o700)
                 write_private(config, {'schema': 1, 'projects': [str(ROOT)]})
-                run([str(keeper), 'start'])
+                run([*keeper_command, 'start'])
             except Exception:
                 # The project lock excludes all managed new-project turns while
                 # installation is in flight. Restore the old code selection if
@@ -143,7 +144,7 @@ def activate(head):
                 upgrade.atomic_write(keeper_source, (backup / 'keeper.py').read_bytes(), 0o700)
                 config.unlink(missing_ok=True)
                 if keeper_status.get('worker_running'):
-                    run([str(keeper), 'start'])
+                    run([*keeper_command, 'start'])
                 raise
         record = {'activated_at': now(), 'project_head': head, 'manifest_sha256': manifest_sha,
                   'previous_release': previous.name, 'rollback_directory': str(backup),

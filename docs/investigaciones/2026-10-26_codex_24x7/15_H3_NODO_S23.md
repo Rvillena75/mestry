@@ -102,3 +102,11 @@ general de 120 s rechazaba un candidato correcto. El contrato revisado asigna
 hasta 900 s para la validación completa, antes de iniciar el escritor. Se
 mantienen todos los tests, el bloqueo y el rechazo de candidatos fallidos; no
 se omiten pruebas ni se aplica una actualización antes de validarla.
+
+La validación completa de `5d377574f8b09915b64f52d76fe530fd0c450436` pasó
+**137 tests en Alpine**. La primera activación se detuvo antes de reemplazar
+el bridge: el helper suponía un wrapper `mestry-keepalive` que no existe en
+esta instalación. El supervisor histórico se invoca mediante Python y su
+archivo ya instalado, como registra el informe 11. Se corrigió esa invocación;
+no se crea otro supervisor ni se cambia su identidad. El bridge anterior y su
+emparejamiento seguían presentes, sin proceso activo tras el rechazo.
