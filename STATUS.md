@@ -6,7 +6,7 @@ repositorio. Originales seleccionados: Google Drive según el ADR congelado.
 - **H0:** cerrada históricamente con límites documentados; no repetir auditoría.
 - **H1:** laboratorio privado validado WSL/S23, SHA final común y ocho tests por
   target. Dos contextos Codex independientes, sin inferencia de agentes reales.
-- **H2:** flujo local `start/finish/receive/check`, comprobador de entorno y
+- **H2, cerrada en WSL:** flujo local `start/finish/receive/check`, comprobador de entorno y
   política revisada implementados. [Guía operativa](docs/WORK_SESSIONS.md) y
   [evidencia H2](docs/investigaciones/2026-10-26_codex_24x7/14_H2_FLUJO_TRABAJO.md).
 - **H3, siguiente tarea:** admitir un clon del MESTRY real en el entorno Horus

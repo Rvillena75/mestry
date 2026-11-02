@@ -162,3 +162,37 @@ preparar un clon fuera de sincronizadores y configurar su política propia.
 Probar primero fetch/aviso, después recepción libre/limpia y actualización
 candidata. La admisión desde S25 y cualquier programación requieren validación
 específica. No migrar distribuciones ni desplegar ejemplos saneados por inercia.
+
+
+## Cierre y publicación comprobados — 02/11/2026
+
+**H2 CERRADA técnicamente en WSL**, con alcance local y publicación GitHub.
+El propio `finish --publish` validó los 110 tests del candidato aislado y publicó
+por push normal el commit **`bb0af0499828c32bf17fa7f4f099616dadb8c245`**.
+La referencia consultada inmediatamente después coincidió exactamente;
+`remote_contains_commit=true`, `remaining_local_changes=false`.
+
+Sobre ese commit se ejecutó el inicio normal online, sin `--resume` ni
+`--offline`, sucesivamente con ambos homes Codex: `SESSION_READY`,
+`codex-cli 0.166.0`, salida 0 y árbol limpio en los dos contextos. `receive`
+posterior devolvió `applied=false`, conservando el mismo SHA. No hubo inferencia.
+
+Un clon público independiente, sin configuración global/sistema ni helper de
+credenciales, descargó ese commit y cotejó **174 archivos idénticos byte a byte**
+con el clon de trabajo; su `git status` estaba limpio. La primera comprobación
+anónima no conservó diagnóstico de una aserción fallida; se repitió con estados
+explícitos, ambos limpios (configuración heredada y aislada). No se atribuye
+una causa no demostrada a ese primer resultado.
+
+Este cierre documental se publica en un commit posterior normal, conservando
+el commit de implementación como evidencia estable. La referencia final se
+comprueba externamente para evitar insertar el SHA de un documento dentro de
+su propio contenido. Las decisiones congeladas y el H0 original conservan sus
+hashes previos; el árbol histórico sigue fuera de Git.
+
+**Pendiente siguiente: H3.** No hay todavía recepción automática de este
+MESTRY en el S23 ni admisión del proyecto real desde S25. Esto delimita el
+incremento, no una prueba fallida de continuidad: la ida/vuelta ARM64 del
+laboratorio quedó acreditada en H1. No se necesitan permisos adicionales para
+usar los comandos WSL ya implementados; modificar teléfonos o sincronizadores
+permanece sujeto al alcance y validación específicos del próximo incremento.

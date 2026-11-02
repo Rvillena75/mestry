@@ -11,7 +11,7 @@ cierre H0, sus correcciones y la publicación pública posterior de MESTRY.
 - **H1:** [validada técnicamente](investigaciones/2026-10-26_codex_24x7/13_H1_LABORATORIO_CONTINUIDAD.md):
   ida/vuelta GitHub WSL/S23, SHA final común, ocho tests por target, catorce
   escenarios WSL y dos guardas en S23. Sin inferencia de agentes reales.
-- **H2:** flujo local implementado, con validación candidata, bloqueo durante
+- **H2:** flujo local implementado y validado, con validación candidata, bloqueo durante
   descendientes, publicación explícita, estado privado y detector de cambios de
   dependencias. [Uso](WORK_SESSIONS.md) y
   [aceptación H2](investigaciones/2026-10-26_codex_24x7/14_H2_FLUJO_TRABAJO.md).
