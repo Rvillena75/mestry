@@ -82,7 +82,14 @@ def stage(bundle, output, seconds):
         output.write_text(json.dumps(status, indent=2) + '\n')
         output.chmod(0o600)
         print(json.dumps(status), flush=True)
-        stopped.wait(seconds)
+        # A long C-level wait can defer Python signal handling under PRoot.
+        # Return to Python periodically while preserving the transfer deadline.
+        deadline = time.monotonic() + seconds
+        while not stopped.is_set():
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                break
+            stopped.wait(min(.25, remaining))
     finally:
         if ssh and ssh.poll() is None:
             ssh.terminate()

@@ -16,6 +16,10 @@ repositorio. Originales seleccionados: Google Drive según el ADR congelado.
 - **Siguiente acción H3:** coordinar el uso de ADB y probar el hilo nuevo S25,
   la recepción automática y el lock real. La autenticación SSH adicional WSL→Horus
   fue rechazada; no se modificó. Bare terminal conserva el acceso ya verificado.
+- **Continuación S23:** se reprodujo un fallo de cierre del helper tras SIGTERM
+  y se corrigió sin ampliar el plazo ni omitir tests. Reproducción y corrección
+  verificadas en WSL; nueva aceptación ARM64 y tarea Codex en curso. El otro hilo
+  conserva el manejo del S25.
 - **H4/H5:** autoridad/recuperación documental y ensayos prolongados pendientes;
   GitHub disponible no demuestra recepción S23 ni disponibilidad 24/7.
 

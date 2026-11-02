@@ -209,3 +209,29 @@ Para reanudar sin repetir H0/H1/H2:
 
 El siguiente incremento sigue siendo esta aceptación S25. No avanzar H4 como
 si H3 estuviera cerrada, ni reinstalar Horus/Codex para resolver esta coordinación.
+
+## Continuación exclusiva en S23 — cancelación del helper
+
+El usuario asignó el S25 al otro hilo. Esta continuación utiliza exclusivamente
+la interfaz del S23 y conserva bridge, SSH, VPN y emparejamientos existentes.
+El supervisor observó `healthy`, cero fallos y `update_pending=true`: HEAD local
+`f0df88d…`, remoto `67b16fd…`, el **02/11 a las 21:35:55 UTC**. El fetch real
+detectó correctamente la actualización sin aplicarla en segundo plano.
+
+El primer `start` gestionado rechazó el candidato por `VALIDATION_FAILED_HELPERS`,
+antes de iniciar Codex. Una ejecución offline protegida reprodujo el fallo:
+el stager sintético no terminó en los **15 s** posteriores a SIGTERM; cuatro
+tests, un error, 17,778 s. Se conservó el checkout anterior.
+
+Se reforzó el mismo test con una espera cuyo despertar se difiere y una señal
+enviada después de entrar en ella. Es una reproducción controlada del problema
+de cierre, no una prueba de su mecanismo interno exacto en PRoot. En WSL falló
+con el código previo (cuatro tests, un error, 16,176 s). El helper vuelve ahora
+a Python al menos cada 250 ms, manteniendo su deadline monotónico original;
+con la corrección pasaron los cuatro tests en **1,675 s**. Se conservan las
+comprobaciones de artefacto único, HTTP 404, descarga única, hijo cerrado y
+puerto cerrado. No se amplió el timeout de 15 s ni se omitió ningún caso.
+
+La validación ARM64 de esta corrección y la tarea nueva de Codex se registrarán
+después de ejecutarlas. El total sigue siendo 137 tests; el fixture de SSH es
+sintético y no modifica túneles ni servicios reales.

@@ -73,20 +73,35 @@ class HelperTests(unittest.TestCase):
             bundle = temp / 'public-code.tar.gz'
             bundle.write_bytes(b'PUBLIC CODE FIXTURE ONLY')
             result = temp / 'result.json'
+            waiting = temp / 'waiting'
             fake = temp / 'fake-ssh.py'
             fake.write_text('import sys,time,json\nif "-N" in sys.argv: time.sleep(30)\nelse: print(json.dumps({"uid":10348,"port":"8023","gatewayports":"no","allowtcpforwarding":"yes"}))\n')
             runner = temp / 'runner.py'
             runner.write_text(
-                'import importlib.util,sys\n'
+                'import importlib.util,sys,threading,time,types\n'
                 f's=importlib.util.spec_from_file_location("fixture_stage",{str(HERE / "stage_horus.py")!r})\n'
                 'm=importlib.util.module_from_spec(s);s.loader.exec_module(m)\n'
+                # Model a blocked wait whose wake-up is deferred by the host.
+                # Send SIGTERM only after entering it, so this also reproduces
+                # the PRoot shutdown failure deterministically on ordinary Linux.
+                'class DeferredWakeEvent:\n'
+                ' def __init__(self): self.requested=False\n'
+                ' def set(self): self.requested=True\n'
+                ' def is_set(self): return self.requested\n'
+                ' def wait(self,timeout):\n'
+                '  if self.requested: return True\n'
+                f'  m.Path({str(waiting)!r}).touch()\n'
+                '  time.sleep(timeout)\n'
+                '  return self.requested\n'
+                'm.threading=types.SimpleNamespace(Thread=threading.Thread,Event=DeferredWakeEvent)\n'
                 f'm.SSH=[sys.executable,{str(fake)!r}]\n'
                 f'm.stage(m.Path({str(bundle)!r}),m.Path({str(result)!r}),30)\n')
             process = subprocess.Popen([sys.executable, '-B', str(runner)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             try:
                 deadline = time.monotonic() + 5
-                while time.monotonic() < deadline and not result.exists():
+                while time.monotonic() < deadline and not waiting.exists():
                     time.sleep(.05)
+                self.assertTrue(waiting.exists(), 'stager did not enter its transfer wait')
                 ready = json.loads(result.read_text())
                 self.assertEqual(ready['pc_bind'], '127.0.0.1')
                 base = f'http://127.0.0.1:{ready["pc_port"]}'
