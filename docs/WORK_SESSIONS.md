@@ -127,6 +127,10 @@ aplica si libre, limpio, compatible y con tests correctos. Los bloqueos devuelve
 código **3** y un motivo estable; errores externos no imprimen credenciales.
 No hay stash/reset/clean, resolución automática de conflictos ni borrado local.
 
+`validation` y `validation_matches_head` indican qué árbol se probó.
+`failed_candidate` conserva el hash/regla del candidato rechazado incluso tras
+un fetch exitoso; solo una validación completa correcta limpia ese error.
+
 Desde PowerShell, el wrapper opcional conserva argumentos y código de salida:
 
 ```powershell

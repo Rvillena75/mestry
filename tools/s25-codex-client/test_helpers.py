@@ -10,6 +10,7 @@ import sys
 import tempfile
 import time
 import unittest
+from unittest.mock import patch
 import urllib.error
 import urllib.request
 
@@ -40,8 +41,9 @@ class HelperTests(unittest.TestCase):
         installer = module('horus_install')
         with tempfile.TemporaryDirectory() as temp:
             source = Path(temp)
-            with self.assertRaisesRegex(ValueError, 'HORUS_SSH_PROFILE_REQUIRED'):
-                installer.install(source)
+            with patch.object(installer.Path, 'home', return_value=source / 'outside-profile'):
+                with self.assertRaisesRegex(ValueError, 'HORUS_SSH_PROFILE_REQUIRED'):
+                    installer.install(source)
             self.assertEqual(list(source.iterdir()), [])
 
     def test_upgrade_checks_hashes_and_tracks_unfinished_turns(self):
@@ -61,8 +63,9 @@ class HelperTests(unittest.TestCase):
             (root / 'fixture.txt').write_text('changed')
             with self.assertRaisesRegex(ValueError, 'HASH_MISMATCH'):
                 updater.verify_release(root)
-            with self.assertRaisesRegex(ValueError, 'HORUS_SSH_PROFILE_REQUIRED'):
-                updater.upgrade(root)
+            with patch.object(updater.Path, 'home', return_value=root / 'outside-profile'):
+                with self.assertRaisesRegex(ValueError, 'HORUS_SSH_PROFILE_REQUIRED'):
+                    updater.upgrade(root)
 
     def test_staging_serves_only_fixed_code_artifact_and_closes_on_stop(self):
         with tempfile.TemporaryDirectory() as temp:

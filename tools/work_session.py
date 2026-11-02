@@ -327,16 +327,26 @@ class Session:
             environment = self.environment(destination)
             results = []
             for rule in self.contract["validation"]:
-                result = subprocess.run(rule["argv"], cwd=destination, capture_output=True, timeout=120)
+                try:
+                    result = subprocess.run(rule["argv"], cwd=destination, capture_output=True, timeout=120)
+                except subprocess.TimeoutExpired:
+                    self.record('validation_failed', failed_candidate={
+                        'at': now(), 'tree': self.text('rev-parse', revision + '^{tree}'),
+                        'rule': rule['name'], 'reason': 'timeout'})
+                    raise Blocked('VALIDATION_TIMEOUT_' + rule['name'].upper()) from None
                 output = result.stdout + result.stderr
                 match = re.search(rb'Ran (\d+) tests?|# tests (\d+)', output)
                 count = int(next(v for v in match.groups() if v)) if match else 0
                 if result.returncode or count < rule.get('minimum_tests', 0):
+                    self.record('validation_failed', failed_candidate={
+                        'at': now(), 'tree': self.text('rev-parse', revision + '^{tree}'),
+                        'rule': rule['name'], 'reason': 'tests_failed_or_missing'})
                     raise Blocked("VALIDATION_FAILED_" + rule['name'].upper())
                 results.append({"name": rule["name"], "tests": count})
         self.state["validation"] = {"at": now(), "tree": self.text("rev-parse", revision + '^{tree}'),
                                     "environment": environment["dependency_fingerprint"], "results": results}
         self.latest_validation = self.state['validation']
+        self.record('validated', failed_candidate=None)
         return results
 
     def receive(self, fetch_only=False):
@@ -461,6 +471,9 @@ class Session:
                   "phase": self.state.get('phase', 'idle'),
                   "recovery_required": self.state.get('phase') in ('running', 'recovery_required') and not busy,
                   "last_result": self.state.get('last_attempt'), "remote_observed_at": self.state.get('remote_observed_at'),
+                  "validation": self.state.get('validation'),
+                  "validation_matches_head": self.state.get('validation', {}).get('tree') == self.text('rev-parse', 'HEAD^{tree}'),
+                  "failed_candidate": self.state.get('failed_candidate'),
                   "s23_received": "not_checked", "document_sync": "external_not_run"}
         try:
             result['environment'] = self.environment()

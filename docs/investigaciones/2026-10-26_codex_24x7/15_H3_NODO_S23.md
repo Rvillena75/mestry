@@ -69,3 +69,11 @@ mantiene la fase exterior running y conserva la nueva evidencia de validación.
 Otro terminal no puede usar esa opción para saltarse el lock. También funciona
 desde el escritor de `start`, sin anidar otro supervisor. La suite vigente
 consta de **136 tests** (54/4/12/13/3/37/9/4); la aceptación ARM64 sigue separada.
+
+La primera validación real ARM64 rechazó `helpers`: dos tests negativos usaban
+el home/arquitectura del host como supuesto de perfil incorrecto. En Horus ese
+supuesto deja de cumplirse. Se cambió la prueba para simular explícitamente un
+home externo con `unittest.mock`, antes de llamar a los guards de instalación y
+upgrade. Los fixtures no deben inspeccionar la instalación real para probar un
+rechazo. No se desactivó ni saltó ninguna prueba; se conservan cuatro helpers y
+las ocho suites. El rechazo ocurrió antes de activar el nuevo bridge.

@@ -123,6 +123,9 @@ class WorkflowIntegration(unittest.TestCase):
         self.peer_commit(value='VALUE = -1\n')
         self.command('receive', blocked='VALIDATION_FAILED_FIXTURE')
         self.assertEqual((self.head(), self.index(), (self.repo / 'calc.py').read_bytes()), before)
+        self.assertEqual(self.command('check')['failed_candidate']['rule'], 'fixture')
+        self.command('receive', '--fetch-only')
+        self.assertEqual(self.command('check')['failed_candidate']['rule'], 'fixture')
 
     def test_changed_dependency_is_not_installed(self):
         self.peer_commit('dependency.txt', 'v2\n')
