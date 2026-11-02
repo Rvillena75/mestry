@@ -1,8 +1,9 @@
 # MESTRY — H3: clon operativo S23 y entrada desde S25
 
-Fecha: **02/11/2026**, America/Santiago. **EN VALIDACIÓN**; este primer registro
-acompaña el código que se probará en el nodo, sin declarar despliegue por tener
-los archivos publicados. Continúa H2; no repite H0 ni modifica el ADR congelado.
+Fecha: **02/11/2026**, America/Santiago. **ACTIVADA EN S23; ACEPTACIÓN S25 EN
+VALIDACIÓN**. El clon ARM64 y la ida/vuelta Git ya tienen evidencia real; falta
+terminar la entrada del cliente móvil. Continúa H2, sin repetir H0 ni modificar
+el ADR congelado.
 
 ## Incremento preparado
 
@@ -110,3 +111,51 @@ esta instalación. El supervisor histórico se invoca mediante Python y su
 archivo ya instalado, como registra el informe 11. Se corrigió esa invocación;
 no se crea otro supervisor ni se cambia su identidad. El bridge anterior y su
 emparejamiento seguían presentes, sin proceso activo tras el rechazo.
+
+## Aceptación real del nodo y de Git
+
+- `4c0ff9fb3070af8460c771211c93b13e54c5a8c7` pasó las ocho suites en
+  Alpine: **137 tests**, con herramientas locales y sin instalar paquetes.
+- `activate --head <ese SHA> --review` devolvió `H3_ADMITTED` y
+  `MESTRY_BRIDGE_UPGRADED/PASS`. Conservó emparejamiento, estado de sesiones,
+  release anterior y puertos; no cambió credenciales ni añadió servicios.
+- La release seleccionada es `22f817f13591e1d6dbd9`. La recuperación conserva
+  el puntero, wrapper y código anterior del supervisor en backups privados.
+- El supervisor existente observó `healthy`, cero fallos consecutivos y
+  `project_poll.state=checked`, proyecto `mestry`, estado `fetched`, SHA local
+  y remoto `4c0ff9f…`, `update_pending=false`, el **02/11 a las 15:12:34 UTC**.
+  Es evidencia del polling real, no una garantía de disponibilidad continua.
+- Un escritor `start` generó únicamente el [recibo saneado del S23](../../validation/H3_S23_RECEIPT.md).
+  El preview seleccionó solo ese documento y conservó el índice. `finish
+  --publish` validó el candidato y publicó **`f0df88defede9c43ea09e788a45065e0c7448320`**.
+- WSL recibió ese commit mediante `receive`, volvió a pasar **137 tests** y
+  quedó limpio, con `validation_matches_head=true` y sin candidato fallido.
+  La autenticación Git efectiva del nuevo clon S23 queda probada por ese push.
+
+La edición pública anónima en `5d37757…` cotejó **179 archivos**, bytes y
+objetos Git normalizados, con árbol limpio. El recibo posterior añade un
+documento técnico; no contiene identidades de hardware, tokens ni historial.
+
+## Prueba del cliente y condiciones de operación
+
+El S25 conserva **0.2.0-mestry-pilot8**. La app estaba desconectada: el texto de
+"Nueva conversación" estaba habilitado en accesibilidad, pero su botón padre
+estaba deshabilitado. Se corrigió la lectura de ese estado antes de crear un
+hilo. Un intento de conexión conservó los campos guardados. El puerto loopback
+18787 devolvió `Connection refused`; esto no contradice el health correcto de
+8787 en el S23 y sitúa la comprobación siguiente en el transporte del cliente.
+ConnectBot está instalado/habilitado y conserva los perfiles MESTRY; no se han
+modificado sus reenvíos, claves, VPN ni emparejamientos.
+
+Durante la reanudación, el servidor ADB del PC cambió repetidamente de PID y
+cortó consultas; también mostró autorización intermitente. Había otro hilo de
+Codex activo, pero no se inspeccionaron sus comandos ni se atribuye causalidad
+sin prueba. Se reutiliza el protocolo del servidor existente. Solo se reintentan
+lecturas; una entrada potencialmente ejecutada se concilia mirando su resultado
+antes de volver a escribir. Ambos agentes pueden trabajar en paralelo con
+servidor compatible; la interfaz de un mismo teléfono requiere turnos.
+
+La pantalla del S23 se mantuvo temporalmente encendida por USB para evitar
+interrumpir la validación con bloqueos. Su valor previo se conserva fuera del
+repositorio y se restaurará al terminar. Esto impide presentar este ensayo
+como prueba de reposo o de funcionamiento con el PC apagado: corresponden a H5.

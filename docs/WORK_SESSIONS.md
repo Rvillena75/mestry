@@ -21,9 +21,9 @@ permisos 600 en un directorio 700 fuera del repositorio:
 instala paquetes ni cambia configuración Git. Repetirlo exige revisar primero
 los cambios de política/entorno; no usarlo automáticamente para quitar un error.
 
-El contrato inicial admite **WSL x86-64**, Python ≥3.12, Git ≥2.43 y Node ≥22.
-Las dependencias instaladas permanecen locales. Alpine ARM64 se admitirá con
-su contrato y validación en H3; estos wrappers no se han instalado en el S23.
+El contrato admite **WSL x86-64 y Alpine ARM64**, Python ≥3.12, Git ≥2.43 y
+Node ≥22. Las dependencias instaladas permanecen locales. El clon S23 pasó las
+ocho suites en H3; su admisión concreta y el cliente S25 se registran en el informe 15.
 
 ## Inicio y continuación
 

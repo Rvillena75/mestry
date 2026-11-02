@@ -21,7 +21,7 @@ flowchart LR
     Bridge --> Broker["Termux · bounded Drive broker"]
     Broker --> Drive["Google Drive · selected documents"]
     GitHub["GitHub · project versions"] --- WSL["Windows / WSL · local development"]
-    GitHub -. "S23 clone/update: next increment" .-> Codex
+    GitHub -- "S23 clone · validated Git versions" --> Codex
 ```
 
 ## Project contributions
@@ -55,12 +55,16 @@ not a client written entirely from scratch. See
 - **H2 work sessions:** explicit start/receive/finish/check commands, candidate
   validation, reviewed publication and a local lock covering child writers.
   Workflow integration tests use disposable local Git repositories.
+- **H3 device evidence:** all 137 tests passed on Alpine ARM64; the existing
+  bridge was admitted to the real project. A phone-originated receipt commit
+  was published to GitHub and received/validated in WSL. S25 entry is under validation.
 - The pinned archive and patch reproduce **68 text files** with matching hashes.
 - Live Drive publication and FolderSync transfer/read-back were separately
   exercised; the offline test suite does not stand in for those device tests.
 
-This does **not** establish 24/7 availability, reboot recovery, or automatic Git
-updates on the phone. The workspace policy is not an OS security sandbox. The
+This does **not** establish 24/7 availability or reboot recovery. Background
+polling fetches references; application at managed entry is still being validated.
+The workspace policy is not an OS security sandbox. The
 full-access mode used by the personal Horus deployment is a documented exception,
 not a safe default for arbitrary projects.
 
@@ -103,7 +107,7 @@ Start with [current project status](STATUS.md) and the
 [H2 session guide](docs/WORK_SESSIONS.md). Both independent Codex accounts can
 use the same WSL checkout in separate turns. Publication selects explicit paths;
 the default finish command previews the candidate without committing or pushing.
-Phone admission and automatic receipt remain H3 work.
+Phone admission is deployed; client entry and automatic receipt remain under H3 validation.
 
 H3 adds a bridge turn guard using the same local checkout lock, an optional
 fetch-only task in the existing supervisor, and a device-local release overlay.
