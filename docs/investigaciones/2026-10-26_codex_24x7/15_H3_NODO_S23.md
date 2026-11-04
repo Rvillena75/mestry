@@ -1,9 +1,12 @@
 # MESTRY — H3: clon operativo S23 y entrada desde S25
 
-Fecha inicial: **02/11/2026**, America/Santiago. Seguimiento al **03/11/2026**.
-**Nodo S23 y primer turno nuevo S25 verificados; H3 sigue abierta por la recepción
-de un candidato nuevo mediante el bridge.** Piloto 9 conserva la selección tras
-reabrir; interrupción y estabilidad de Termux/SSH requieren aceptación adicional.
+Fecha inicial: **02/11/2026**, America/Santiago. Seguimiento al **04/11/2026**.
+**H3 aceptada para el recorrido definido el 04/11:** revisión nueva aplicada
+por bridge, validación ARM64, tarea real S25 sobre ese SHA, BUSY/preview,
+terminación y reapertura fresca, con estado final limpio/libre/idle.
+[Recibo vigente](../../validation/H3_BRIDGE_ACCEPTANCE_20261104.md).
+Las secciones anteriores a este cierre conservan sus resultados, incluidos
+intentos incompletos. **H4/H5 pendientes**, sin implementación aquí.
 [Evaluación y siguientes pasos](../../PROJECT_REVIEW.md).
 
 **Estado al inicio del informe, 02/11:** nodo S23 verificado y cliente S25
@@ -820,3 +823,98 @@ hash; los cambios de política se limitan a los dos controles revisados,
 sin cambiar contrato, identidad o huella de dependencias. La promoción
 consume el blob revisado; no crea otra aprobación durante la recepción.
 Se retirará ese PATH temporal antes del recorrido real S25.
+
+
+### Recibo nativo del cuarto intento — 04/11, 13:39 UTC
+
+El comprobador inició a **13:31:20.908 UTC** y terminó a **13:39:04.682 UTC**,
+**PASS/salida 0**. `session.start` aplicó
+`dc3a872a839295e6c4d65ef2b67eab3dcba90f30` →
+`791688abdd59afb33516916c9e031c94553e02c5`, con
+`applied_new_revision=true`. La validación ARM64 del árbol
+`46026a14ed4088ddf4e663d8926a807202ca986d` pasó las ocho suites:
+**54/4/28/13/3/40/9/4 = 155 tests**.
+
+El turno nativo terminó `completed`; HEAD, BUSY, preview e historial fresco
+pasaron. Final limpio/libre/idle, validación coincidente, sin recuperación ni
+candidato fallido. La transición exacta de los dos controles se revisó antes
+de entrar; el blob futuro se promovió tras validar/aplicar por el bridge.
+Se mantuvo la huella anterior de dependencias. El launcher temporal se retiró
+antes de S25: recibo con cero turnos, PATH normal e índice, release, pairing e
+hilos preservados. No se reparó el estado después de este turno.
+
+**La tarea real S25 sobre este SHA y su reapertura siguen pendientes** en este
+punto cronológico. El S25 se bloqueó durante la preparación y requiere
+intervención física para desbloquearlo; no se lee ni adivina su PIN.
+
+
+El poll posterior a la retirada del launcher devolvió fetch-only OK,
+`applied=false`, con HEAD/remoto en `791688a…`. El check nativo fresco de
+13:53 UTC confirmó limpio/libre/idle, validación coincidente, sin recuperación
+y `failed_candidate=null`. Se restaura el tag temporal de diagnóstico S25 y
+los pins/parche piloto 9 locales; esa restauración WSL conserva los dos controles
+nuevos y exige su revisión explícita. No se publica el cierre H3 sin la tarea
+S25 faltante. Los probes S25 previos no alcanzaron SSH privado/túnel; WSL→Termux
+SSH sí pasó. Se mantienen las capas separadas, sin atribuir causa por inferencia.
+
+
+### Cuarto intento: transición revisada y recepción nueva — PASS
+
+Se verificó de nuevo `dc3a872a839295e6c4d65ef2b67eab3dcba90f30`, limpio/libre/idle, sin recuperación.
+El fetch-only observó `791688abdd59afb33516916c9e031c94553e02c5` sin aplicarlo. Los auxiliares privados coincidieron
+con sus hashes publicados. La primera preparación devolvió BUSY antes del lock,
+sin mutaciones; se concilió y repitió esa operación. Se revisaron los hashes
+exactos del controlador y sus tests; contrato y huella de dependencias no cambiaron.
+
+La política futura se preparó antes de entrar, limitada a esos dos controles.
+El launcher privado quedó fijado por hash y limitado al lease del bridge.
+`session.start` validó **155 tests ARM64**, árbol `46026a14ed4088ddf4e663d8926a807202ca986d`, aplicó
+**`dc3a872a839295e6c4d65ef2b67eab3dcba90f30` → `791688abdd59afb33516916c9e031c94553e02c5`** y promovió solo entonces el blob previamente revisado.
+No hubo aplicación CLI previa ni aprobación automática durante la recepción.
+El turno nativo completó HEAD/BUSY/preview e historial fresco; terminó
+limpio/libre/idle, sin recuperación ni candidato fallido. Se retiró el PATH
+temporal antes de usar el S25. Se preservaron configuración ajena, release,
+claves, pairing, índice e hilos, con backups y rollback.
+
+### Tarea S25 y cierre obligatorio — PASS
+
+La tarea del proyecto real leyó AGENTS.md/STATUS.md y ejecutó HEAD nuevo,
+`receive --fetch-only` BUSY/salida 3 y `--within-turn finish README.md` con
+índice intacto y publicación no solicitada. Ejecutó además cuatro tests de
+recibos: **159 por target**. Los recibos pertenecen al mismo turno, terminal
+`completed`, con lock liberado. Cierre del proceso y reapertura conservaron el
+hilo y recuperaron recibos mediante `session.content` fresco.
+
+El check nativo final confirmó `791688abdd59afb33516916c9e031c94553e02c5`, limpio/libre/idle, validación coincidente,
+sin recuperación ni candidato fallido. No se reparó el estado después del
+cuarto intento o la tarea S25 para conseguir esos valores. Interrupción complementaria aceptada en otro turno de espera: gesto normal sobre el control dinámico, turno identificado `interrupted`, actividad fresca y cero turnos activos.
+
+La carga general de estado ya ocurre bajo lock; la identificación anterior de
+esa carrera queda corregida por la transición de controles, además del poll
+atómico instalado en el supervisor existente. No se capturó la instrucción
+exacta de la marca nativa anterior. El rechazo original de workflow conserva
+causa desconocida; la salida de futuros fallos queda ahora privada y acotada.
+
+Se restauró el tag temporal S25. No hubo reinstalación ni cambios de protecciones,
+red, OAuth, Drive o sincronizadores. README/parche/pins Android y dos auxiliares
+Drive permanecen locales. La publicación posterior de este informe no acredita
+otra recepción del checkout S23. Disponibilidad y cambio directo de red conservan
+sus pruebas separadas; **H4/H5 pendientes**. [Recibo](../../validation/H3_BRIDGE_ACCEPTANCE_20261104.md).
+
+
+### Conciliación de instrumentación S25
+
+La captura inicial de ID al crear el hilo apuntó al hilo anterior del comprobador
+nativo. Se conservó ese resultado, se identificó el hilo real por el mensaje
+único enviado desde S25 y se verificaron sus recibos, sin reenviar la tarea. La
+recarga fresca recuperó los cinco comandos completos; el snapshot parcial no
+se tomó como ausencia de ejecución. La reapertura posterior conservó ese mismo
+ID y recibió `session.content` nuevo. No se demuestra por esa captura prematura
+un defecto adicional de selección de piloto 9.
+
+La espera complementaria se envió una sola vez. Con actividad fresca del comando
+y la descripción dinámica exacta, se verificó el padre habilitado y se realizó
+una pulsación prolongada normal. El servidor confirmó ese turno `interrupted`,
+cero actividad y contenido fresco. El turno principal de aceptación permanece
+`completed`; no se mezclan ambas terminaciones. Se restauró el tag de diagnóstico
+y se retiraron únicamente los archivos temporales propios del harness.

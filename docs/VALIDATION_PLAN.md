@@ -1,12 +1,13 @@
 # Plan de validación reproducible
 
-## Lectura vigente — 03/11/2026
+## Lectura vigente — 04/11/2026
 
-La continuidad sigue H0–H5. El [estado](../STATUS.md), la
-[revisión del proyecto](PROJECT_REVIEW.md) y el [registro H3](investigaciones/2026-10-26_codex_24x7/15_H3_NODO_S23.md)
-recogen los resultados posteriores: primer turno nuevo S25, piloto 9 y lectura
-por datos móviles aceptados; interrupción, cambio directo de red y nueva recepción
-Git por el bridge pendientes. H4/H5 no se dan por cerradas.
+El [recibo H3](validation/H3_BRIDGE_ACCEPTANCE_20261104.md) acepta revisión Git
+nueva por bridge, validación ARM64, tarea S25 sobre ese SHA, BUSY/preview,
+terminación y recuperación fresca del hilo, con estado final limpio/libre/idle.
+**159 tests por target** acreditan el candidato; los resultados históricos no
+lo sustituyen. Cambio directo de red y disponibilidad prolongada se mantienen
+separados. **H4/H5 pendientes**, sin implementación en esta continuación.
 
 Los protocolos R2/EXP/V y sus actualizaciones que siguen conservan fecha y alcance
 históricos. No implican volver a instalar la ruta Linux descartada, repetir OAuth

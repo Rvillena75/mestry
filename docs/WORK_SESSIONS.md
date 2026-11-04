@@ -84,7 +84,7 @@ sh tools/work-session.sh check --remote
 ```
 
 El cierre selecciona solo esas rutas en un índice temporal, examina todo el
-candidato y todos los commits salientes, ejecuta las seis suites en una copia
+candidato y todos los commits salientes, ejecuta las ocho suites en una copia
 aislada y vuelve a comprobar HEAD, índice, política, archivos y remoto. Solo
 después modifica el índice real, crea un commit normal y hace push sin force.
 Un staging previo no seleccionado o parcial se rechaza y conserva. Los cambios

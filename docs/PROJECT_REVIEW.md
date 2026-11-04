@@ -1,8 +1,30 @@
-# Revisión del estado de MESTRY — 03/11/2026
+# Revisión del estado de MESTRY — 04/11/2026
 
-Corte documental: **23:20 UTC**. Revisión del clon de desarrollo, consulta real
-al remoto y cotejo de evidencia privada del ensayo anterior. Los originales
-históricos y la evidencia bruta permanecen fuera de este repositorio.
+**H3 aceptada para el recorrido definido.** Una revisión distinta se validó y
+aplicó por el bridge y una tarea real S25 trabajó sobre ella. El
+[recibo](validation/H3_BRIDGE_ACCEPTANCE_20261104.md) reúne versiones, suites,
+concurrencia, terminación y recuperación fresca del mismo hilo. El estado final
+S23 fue limpio/libre/idle, sin recuperación ni candidato fallido. H4/H5 siguen
+pendientes. APK piloto 9, release privada, checkout aceptado `791688abdd59afb33516916c9e031c94553e02c5` y fuentes
+locales conservan referencias distintas.
+
+La corrección carga estado bajo lock en la CLI y en el poll del supervisor
+existente. La transición de los dos controles protegidos fue explícitamente
+revisada antes de recibir; la huella nativa de dependencias se conservó. El
+PATH temporal se retiró antes de S25. **159 pruebas por target** acreditan ese
+candidato. Interrupción complementaria aceptada en otro turno de espera: gesto normal sobre el control dinámico, turno identificado `interrupted`, actividad fresca y cero turnos activos.
+
+El recorte de procesos del 04/11 tiene evidencia actual de ActivityManager;
+no explica retrospectivamente las señales del 03/11. No se cambiaron las
+protecciones Android. Cambio directo de red y disponibilidad prolongada siguen
+siendo mejoras posteriores. El siguiente paso es revisar Android/pins locales,
+sin avanzar H4/H5. Las 16 rutas iniciales se preservaron; cinco permanecen locales.
+
+## Revisión histórica del 03/11
+
+El corte siguiente conserva su fecha y describe el estado anterior a la aceptación
+del 04/11. Sus pendientes H3 se concilian con el recibo vigente; los límites del
+producto completo y de H4/H5 permanecen aplicables.
 
 ## Evaluación
 

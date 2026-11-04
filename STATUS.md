@@ -1,91 +1,42 @@
 # Estado para continuar MESTRY
 
-Actualizado: **03/11/2026**. Autoridad de código y documentación técnica: este
-repositorio. Originales seleccionados: Google Drive según el ADR congelado.
+Actualizado: **04/11/2026**. Código/documentación técnica: este repositorio.
+Originales seleccionados: Drive según el ADR congelado.
 
-[Revisión del proyecto y siguientes pasos](docs/PROJECT_REVIEW.md): prototipo
-funcional de desarrollo móvil; estabilización y cierre de H3 pendientes. La
-revisión documental del 03/11 cotejó la evidencia reciente y el remoto; no repitió
-las pruebas físicas ni cerró H4/H5.
+**H3 aceptada para el recorrido solicitado:** revisión Git nueva aplicada por
+el bridge y tarea real S25 sobre ese SHA, con concurrencia, terminación y
+recuperación fresca del hilo. [Recibo](docs/validation/H3_BRIDGE_ACCEPTANCE_20261104.md) y
+[cronología](docs/investigaciones/2026-10-26_codex_24x7/15_H3_NODO_S23.md).
 
-- **H0:** cerrada históricamente con límites documentados; no repetir auditoría.
-- **H1:** laboratorio privado validado WSL/S23, SHA final común y ocho tests por
-  target. Dos contextos Codex independientes, sin inferencia de agentes reales.
-- **H2, cerrada en WSL:** flujo local `start/finish/receive/check`, comprobador de entorno y
-  política revisada implementados. [Guía operativa](docs/WORK_SESSIONS.md) y
-  [evidencia H2](docs/investigaciones/2026-10-26_codex_24x7/14_H2_FLUJO_TRABAJO.md).
-- **H3, conversación nueva S25 verificada:** el 03/11 el primer turno de un
-  hilo creado con piloto 9 confirmó `4865d2c`, rechazo `BUSY` con salida 3 y
-  preview con índice intacto. Terminación y recarga fresca comprobadas.
-  [Registro H3](docs/investigaciones/2026-10-26_codex_24x7/15_H3_NODO_S23.md).
-- **Selección S25 corregida e instalada:** piloto 9 (`10009`) persiste la
-  selección y evita que un índice antiguo sustituya la preferencia reciente.
-  Dos cierres/reaperturas conservaron el hilo esperado y recuperaron sus recibos
-  mediante contenido fresco. Misma firma, permisos, UID, datos y emparejamiento.
-  El envío sin inicio observado por la mañana no se reprodujo antes del cambio;
-  su causa sigue desconocida y no se atribuye a esta corrección.
-- **Datos móviles:** conexión SSH nueva, túnel/autorización e historial fresco
-  aceptados con `CELLULAR` predeterminada y sin agente Wi-Fi. El cambio directo
-  desde Wi-Fi no recuperó contenido fresco; reconectar el perfil SSH al cambiar
-  de red. Wi-Fi restaurado y recarga fresca posterior verificada.
-- **Siguiente acción H3:** publicar un candidato nativo revisado, recibirlo y
-  validarlo por `session.start` del bridge y ejecutar la tarea real S25 sobre
-  el SHA nuevo. Se mantienen los pins vigentes en S23; Android piloto 9 y sus
-  pins nuevos se preservan locales. No reaprobar la política nativa ni aplicar
-  primero por CLI. Estabilidad prolongada y H4/H5 se mantienen separadas.
-- **SSH S23 recuperado, estabilidad pendiente:** hubo dos ausencias del daemon
-  en esta continuación; se arrancó el helper existente sin cambiar configuración.
-  No se estableció su causa.
-- **Interrupción S25 pendiente:** el turno de espera inició, pero al conciliarlo
-  no estaba habilitado el control para detenerlo. No se realizó el gesto ni se
-  acredita cancelación. El check nativo posterior confirmó limpio/libre/idle;
-  la actividad antigua del cliente se concilió con una recarga fresca.
-- **Herramientas S23 implementadas:** comprobador del bridge, observación por el
-  ADB existente y lector del fixture Drive. **148 pruebas offline correctas**.
-  [Guía y prueba remota S25](docs/S23_CHECKS.md).
-- **Reposo 03/11:** PASS; ventana de 20 min, 41/41 muestras saludables y
-  41/41 en reposo de pantalla. USB conectado; no acepta PC apagado ni 24/7.
-- **Drive 03/11:** autenticación y lectura de 79 bytes verificadas por hash.
-  Se restauraron la carpeta y última revisión autorizadas; la revisión antigua
-  que heredó la restauración vuelve a su estado previo en papelera. Google
-  cambió el padre de la carpeta; el publicador conserva su bloqueo por destino
-  diferente de Review. No se alteró su configuración ni se restauró el ancestro.
-- **Límite H3:** el checkout ya estaba en `4865d2c` al entrar al bridge; no se
-  observó aplicación de un candidato nuevo por esa entrada. El primer turno
-  en una conversación nueva y la selección después de reabrir ya tienen
-  aceptación física con piloto 9.
-- **Corrección S23:** el helper atiende cancelación con esperas acotadas;
-  reproducción antes/después y aceptación ARM64 completadas, con el mismo plazo
-  de cierre de 15 s y todos los tests conservados.
-- **H4/H5:** autoridad/recuperación documental y ensayos prolongados pendientes;
-  GitHub disponible no demuestra recepción S23 ni disponibilidad 24/7.
+- **Recepción:** `dc3a872a839295e6c4d65ef2b67eab3dcba90f30` → `791688abdd59afb33516916c9e031c94553e02c5` por `session.start`, sin aplicación CLI previa.
+- **Validación:** **159 tests por target**; 155 del contrato antes de aplicar
+  en ARM64 y cuatro de recibos ejecutados desde S25. Las pruebas históricas
+  no sustituyen este candidato.
+- **S25:** leyó AGENTS/STATUS reales y HEAD nuevo; BUSY/salida 3 y preview OK
+  con índice intacto y sin publicación. Mismo turno `completed`, lock libre,
+  reapertura del mismo hilo con `session.content` fresco y recibos recuperados.
+- **Final S23:** SHA de aceptación `791688abdd59afb33516916c9e031c94553e02c5`, limpio/libre/idle, validación
+  coincidente, sin recuperación ni candidato fallido. La publicación posterior
+  del informe y la release instalada son referencias distintas.
+- **Correcciones H3:** carga de estado bajo lock en CLI y entrada fetch-only
+  del supervisor existente; dos regresiones antes/después. Salida fallida del
+  validador conservada privada. Transición explícita de dos controles protegidos,
+  con política futura revisada antes de entrar y promoción tras validar/aplicar;
+  dependencia nativa anterior conservada y launcher temporal retirado.
+- **Cliente:** piloto 9 / 10009 conservado, sin reinstalación. Interrupción complementaria aceptada en otro turno de espera: gesto normal sobre el control dinámico, turno identificado `interrupted`, actividad fresca y cero turnos activos.
+- **Incidencias operativas:** recorte de procesos observado el 04/11; se recuperó
+  con componentes existentes sin cambiar el límite Android. Las señales del
+  03/11 mantienen causa desconocida. Cambio directo de red y disponibilidad
+  prolongada conservan sus aceptaciones separadas.
+- **Trabajo local preservado:** README/parche/pins Android piloto 9 y dos
+  auxiliares Drive. No se incluyeron en los candidatos nativos. Publicarlos
+  requiere revisar la transición de fuentes, preservando operativo y rollback.
+- **H0/H1/H2:** cierres históricos con límites; flujo y bloqueo cooperativo
+  conservados. No se repitió instalación/auditoría.
+- **H4/H5:** pendientes, sin implementación aquí. Destino documental,
+  autoridades/restore, PC apagado, reinicio y 24/7 no se aceptan por esta prueba.
 
-La validación H2 pasó **111 tests** y reprodujo los **68 hashes** del parche.
-Usa fixtures Git locales y las suites offline existentes. No
-instala paquetes ni ejecuta inferencia, servicios o sincronizadores. El wrapper
-mantiene bloqueo durante los descendientes del comando; escritores que ignoren
-el procedimiento siguen siendo un riesgo cooperativo explícito.
-
-Al finalizar cada tarea: actualizar este estado con cambios, pruebas y próximo
-paso, revisar rutas y usar `finish` primero como previsualización. Publicar solo
-el conjunto autorizado. Mantener credenciales y conversaciones fuera de Git.
-
-
-Continuación 04/11 en curso: `dc3a872…` fue aplicado por `session.start` y
-pasó 141 tests ARM64. HEAD, BUSY y preview del turno nativo pasaron, pero el
-cierre dejó recuperación pendiente; no acepta H3. Se reprodujo una carrera
-de snapshot anterior al lock y se preparó una entrada atómica fetch-only para
-el supervisor existente, con cuatro pruebas nuevas. La recuperación se revisará
-con escritor terminado, checkout limpio y política sin cambios. S25 sobre el
-siguiente candidato y su estado final siguen pendientes. H4/H5 no avanzan.
-
-
-Continuación de controles 04/11: la recepción de `197aa5b…` fue rechazada
-por la suite workflow; se conservan SHA anterior, árbol limpio y candidato
-fallido. Dos pruebas acotadas y una repetición completa de 38 tests nativos
-pasaron; no se estableció la causa de aquel fallo. La nueva versión mueve
-la carga de política/estado bajo lock, pasa 40 tests WSL y conserva salida
-privada del validador fallido. Cinco pruebas de transición revisada pasan,
-incluida validación, fast-forward y promoción real contra un remoto Git local.
-Antes de publicar/recibir se revisarán los hashes de los dos controles cambiados;
-no se reaprueba por defecto una política para quitar el bloqueo.
+Siguiente paso: revisar el conjunto Android/pins local y su compatibilidad
+nativa antes de integrarlo. Mantener las mejoras de disponibilidad separadas;
+no comenzar H4/H5 sin indicación. [Revisión](docs/PROJECT_REVIEW.md),
+[roadmap](docs/ROADMAP.md), [sesiones](docs/WORK_SESSIONS.md).

@@ -1,35 +1,25 @@
 # Roadmap condicionado por evidencia
 
-## Seguimiento vigente — 03/11/2026
+## Seguimiento vigente — 04/11/2026
 
-El plan vigente es **H0–H5 del informe 09**, con la publicación pública posterior
-y las aceptaciones H1/H2/H3 registradas. La [revisión del proyecto](PROJECT_REVIEW.md)
-consolida evidencia, incidencias y criterios de aceptación. [Estado breve](../STATUS.md).
+[Recibo H3](validation/H3_BRIDGE_ACCEPTANCE_20261104.md),
+[revisión](PROJECT_REVIEW.md) y [estado](../STATUS.md).
 
-| Etapa | Estado vigente | Qué falta |
+| Etapa | Estado | Siguiente trabajo |
 |---|---|---|
-| H0 | Cerrada históricamente | Revalidar solo los prerrequisitos de cada ensayo |
-| H1 | Laboratorio validado WSL/S23 | No repetir la instalación ni la auditoría |
-| H2 | Flujo WSL implementado y validado | Mantener política revisada y bloqueo cooperativo |
-| H3 | Nodo, CLI y primer turno nuevo S25 verificados; piloto 9 conserva selección al reabrir | Aplicar un candidato Git nuevo por el bridge, con revisión previa de entorno/huella S23 |
-| H4 | Componentes documentales parciales; lectura por hash aceptada | Destino de publicación válido, autoridades/IDs y recuperación sintética sin PC |
-| H5 | Reposo 20 min con USB aceptado como ventana acotada | Estabilidad de servicios, PC apagado, 24 h y recuperación separada |
+| H0/H1 | Cierres históricos con límites | No repetir instalación |
+| H2 | Flujo y bloqueo cooperativo conservados | Mantener validación y revisión explícita |
+| H3 | Recorrido de recepción Git y tarea real S25 aceptado | Revisar Android/pins locales, preservando operativo y rollback |
+| H4 | Pendiente; no implementada aquí | Destino documental, autoridades/IDs y restore sintético |
+| H5 | Pendiente; no implementada aquí | Disponibilidad, PC apagado, reinicio y recuperación |
 
-**Orden vigente para este incremento:** revisar/publicar el candidato nativo →
-recepción validada por el bridge → tarea S25 sobre SHA nuevo → terminación,
-reapertura fresca y estado final. Diagnosticar transporte solo hasta sostener
-este recorrido. Las incidencias de señal 9 y cambio directo Wi-Fi/datos quedan
-separadas de las mejoras posteriores de disponibilidad; H3 no exige 24 h.
-H4/H5 permanecen pendientes y requieren su alcance posterior.
+La CLI y el poll del supervisor cargan estado bajo lock. Dos controles protegidos
+se admitieron mediante transición exacta revisada antes de recibir, conservando
+la huella nativa de dependencias. La operación se aceptó sin campaña de 24 h.
+Cambio directo Wi-Fi/datos y residencia de procesos conservan pruebas separadas.
+No se cambiaron las protecciones Android para completar este recorrido.
 
-Los siguientes pasos y sus criterios están en la [revisión](PROJECT_REVIEW.md#alcance-vigente-de-cierre-h3--continuación-del-0311).
-Core, voz, memoria del asistente, corpus incremental y RAG integrado siguen
-fuera de lo aceptado por el piloto de desarrollo. Recuperar las fuentes previas
-referidas por el ADR antes de especificar esas etapas.
-
-Los apartados históricos conservan sus expresiones de prioridad y sus pendientes
-al momento de cada ensayo. No sustituyen este seguimiento ni autorizan repetir
-instalaciones o transferir conversaciones entre cuentas.
+Las propuestas históricas siguientes no autorizan avanzar H4/H5.
 
 ## Registro histórico de propuestas y experimentos
 

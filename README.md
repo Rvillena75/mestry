@@ -57,30 +57,29 @@ not a client written entirely from scratch. See
 - **H2 work sessions:** explicit start/receive/finish/check commands, candidate
   validation, reviewed publication and a local lock covering child writers.
   Workflow integration tests use disposable local Git repositories.
-- **H3 device evidence:** all 137 tests passed on Alpine ARM64; the existing
-  bridge was admitted to the real project. A phone-originated receipt commit
-  was published to GitHub and received/validated in WSL. A fresh native Codex
-  CLI task then verified the updated project and both session guards. A later
-  authenticated loopback bridge turn verified actual command receipts, lock
-  rejection, fresh history responses and clean release. The first turn in a
-  new S25 conversation verified HEAD, lock rejection and preview. Pilot 9 fixes
-  stale selection on restart; two cold restarts retained the expected thread
-  and recovered command receipts through fresh server history. A new SSH
-  connection over cellular also passed tunnel, authorization and history checks.
+- **H3 device acceptance:** the bridge applied a distinct Git revision after
+  155 contract tests on Alpine ARM64. A real S25 task read AGENTS/STATUS,
+  verified the new HEAD, received BUSY/exit 3 and ran an unchanged-index preview.
+  That turn completed, released the lock and recovered fresh receipts from the
+  same thread after a cold client restart. Four receipt tests also passed:
+  **159 tests per target**. See the [receipt](docs/validation/H3_BRIDGE_ACCEPTANCE_20261104.md).
 - The pinned archive and patch reproduce **68 text files** with matching hashes.
 - Live Drive publication and FolderSync transfer/read-back were separately
   exercised; the offline test suite does not stand in for those device tests.
 
-This does **not** establish 24/7 availability or reboot recovery. Background
-polling fetches references; validated application at managed CLI entry is proven.
-Loopback bridge entry is verified with an already current checkout; applying
-another new revision through that entry remains pending. The first native H3 candidate keeps the existing source pins and backend release.
-The pilot 9 Android patch and its new pins remain preserved local changes; their
-publication and native policy transition are separate from this candidate.
-Wi-Fi-to-cellular handover did not recover fresh content; establishing a new SSH
-connection on cellular passed. Wi-Fi was restored and fresh history rechecked.
-A later Termux session ended with signal 9 and SSH required the existing startup
-helper again; the cause remains unresolved.
+This does **not** establish 24/7 availability or reboot recovery. The accepted
+checkout is `791688abdd59afb33516916c9e031c94553e02c5`; the installed bridge release, pilot 9 APK and local client
+sources are separate references. Both CLI and background polling now load
+workflow state under the lock. The two changed protected controls had an exact
+reviewed transition before bridge entry; dependency pins stayed unchanged.
+
+Android process trimming interrupted the first attempt. A second application
+ended with recovery pending, and a third candidate was rejected by validation.
+Those outcomes remain recorded. The final attempt and S25 task finished without
+repairing their state afterward. Existing SSH/bridge components were reused;
+Android protections, pairing and data were preserved. Direct network handover
+and prolonged availability remain separate follow-up work. **H4/H5 are pending.**
+
 The workspace policy is not an OS security sandbox. The
 full-access mode used by the personal Horus deployment is a documented exception,
 not a safe default for arbitrary projects.
@@ -127,8 +126,8 @@ Start with [current project status](STATUS.md), the
 use the same WSL checkout in separate turns. Publication selects explicit paths;
 the default finish command previews the candidate without committing or pushing.
 Phone admission, managed CLI receipt and the first turn in a new S25 conversation
-are verified. Applying a new Git candidate through the bridge remains under H3
-validation, including review of the updated source fingerprint on the phone.
+are verified. Applying a new native Git candidate through the bridge is accepted under H3.
+The local pilot 9 source fingerprint still requires a separate reviewed transition.
 
 H3 adds a bridge turn guard using the same local checkout lock, an optional
 fetch-only task in the existing supervisor, and a device-local release overlay.
