@@ -1,30 +1,35 @@
 # Roadmap condicionado por evidencia
 
-## Seguimiento vigente — 02/11/2026
+## Seguimiento vigente — 03/11/2026
 
-El plan de continuidad actual es **H0–H5 del informe 09**, actualizado por el
-cierre H0, sus correcciones y la publicación pública posterior de MESTRY.
-[Revisión por etapas y siguiente incremento](investigaciones/2026-10-26_codex_24x7/12_REVISION_PLAN_IMPLEMENTACION.md).
+El plan vigente es **H0–H5 del informe 09**, con la publicación pública posterior
+y las aceptaciones H1/H2/H3 registradas. La [revisión del proyecto](PROJECT_REVIEW.md)
+consolida evidencia, incidencias y criterios de aceptación. [Estado breve](../STATUS.md).
 
-- **H0:** cerrada históricamente; Horus se reabrió normalmente para H1 y se
-  revalidaron el perfil, GitHub y ejecución ARM64. No se repitió la auditoría.
-- **H1:** [validada técnicamente](investigaciones/2026-10-26_codex_24x7/13_H1_LABORATORIO_CONTINUIDAD.md):
-  ida/vuelta GitHub WSL/S23, SHA final común, ocho tests por target, catorce
-  escenarios WSL y dos guardas en S23. Sin inferencia de agentes reales.
-- **H2:** flujo local implementado y validado, con validación candidata, bloqueo durante
-  descendientes, publicación explícita, estado privado y detector de cambios de
-  dependencias. [Uso](WORK_SESSIONS.md) y
-  [aceptación H2](investigaciones/2026-10-26_codex_24x7/14_H2_FLUJO_TRABAJO.md).
-- **H3:** clon real S23, recepción al iniciar sesión, 137 tests ARM64 y tarea nueva
-  de Codex CLI verificados; push S23/recepción WSL y guardas de concurrencia reales
-  probados. Pendiente la admisión desde el cliente/bridge S25. El informe 15 separa
-  la aceptación CLI del nodo de la prueba física de ese cliente.
-- **H4/H5:** componentes documentales y de supervisión parciales; faltan
-  recuperación/autoridades completas y ensayos sin PC/reposo/24 h.
+| Etapa | Estado vigente | Qué falta |
+|---|---|---|
+| H0 | Cerrada históricamente | Revalidar solo los prerrequisitos de cada ensayo |
+| H1 | Laboratorio validado WSL/S23 | No repetir la instalación ni la auditoría |
+| H2 | Flujo WSL implementado y validado | Mantener política revisada y bloqueo cooperativo |
+| H3 | Nodo, CLI y primer turno nuevo S25 verificados; piloto 9 conserva selección al reabrir | Aplicar un candidato Git nuevo por el bridge, con revisión previa de entorno/huella S23 |
+| H4 | Componentes documentales parciales; lectura por hash aceptada | Destino de publicación válido, autoridades/IDs y recuperación sintética sin PC |
+| H5 | Reposo 20 min con USB aceptado como ventana acotada | Estabilidad de servicios, PC apagado, 24 h y recuperación separada |
 
-Los apartados siguientes conservan cronología y propuestas anteriores. Sus
-pendientes ya resueltos no deben repetirse, y los componentes de transferencia
-de conversaciones de la propuesta D no forman parte del requisito vigente.
+**Orden vigente para este incremento:** revisar/publicar el candidato nativo →
+recepción validada por el bridge → tarea S25 sobre SHA nuevo → terminación,
+reapertura fresca y estado final. Diagnosticar transporte solo hasta sostener
+este recorrido. Las incidencias de señal 9 y cambio directo Wi-Fi/datos quedan
+separadas de las mejoras posteriores de disponibilidad; H3 no exige 24 h.
+H4/H5 permanecen pendientes y requieren su alcance posterior.
+
+Los siguientes pasos y sus criterios están en la [revisión](PROJECT_REVIEW.md#alcance-vigente-de-cierre-h3--continuación-del-0311).
+Core, voz, memoria del asistente, corpus incremental y RAG integrado siguen
+fuera de lo aceptado por el piloto de desarrollo. Recuperar las fuentes previas
+referidas por el ADR antes de especificar esas etapas.
+
+Los apartados históricos conservan sus expresiones de prioridad y sus pendientes
+al momento de cada ensayo. No sustituyen este seguimiento ni autorizan repetir
+instalaciones o transferir conversaciones entre cuentas.
 
 ## Registro histórico de propuestas y experimentos
 

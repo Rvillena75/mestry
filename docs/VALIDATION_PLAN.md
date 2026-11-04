@@ -1,5 +1,21 @@
 # Plan de validación reproducible
 
+## Lectura vigente — 03/11/2026
+
+La continuidad sigue H0–H5. El [estado](../STATUS.md), la
+[revisión del proyecto](PROJECT_REVIEW.md) y el [registro H3](investigaciones/2026-10-26_codex_24x7/15_H3_NODO_S23.md)
+recogen los resultados posteriores: primer turno nuevo S25, piloto 9 y lectura
+por datos móviles aceptados; interrupción, cambio directo de red y nueva recepción
+Git por el bridge pendientes. H4/H5 no se dan por cerradas.
+
+Los protocolos R2/EXP/V y sus actualizaciones que siguen conservan fecha y alcance
+históricos. No implican volver a instalar la ruta Linux descartada, repetir OAuth
+ni revocar la excepción Horus ya autorizada. Cada próximo ensayo debe fijar antes
+condiciones, criterio de éxito, cobertura, evidencia y restauración; los criterios
+propuestos para los próximos incrementos están en la revisión enlazada.
+
+## Registro histórico de protocolos y resultados
+
 **Actualización Drive posterior — 2026-10-21 UTC:** V12 **PARCIAL**: carpeta privada y cuatro fixtures `.md` subidos por el conector/WSL, permisos solo de propietario, MIME conservado y descarga exacta por SHA-256, incluidos CRLF. La prueba humana del S25 produjo una edición del cuerpo recuperada sin sobrescritura; la API de comentarios sigue vacía. El usuario no utiliza comentarios en Markdown y los retira de los requisitos actuales. Pendientes cliente concreto S25 y adaptador/OAuth/publicación del S23. **V13 opcional, fuera del piloto actual y sin aceptación técnica.** El usuario eligió app Android para el control Codex del S25; sigue en evaluación, sin instalar bridge ni abrir puertos. [Evidencia](validation/mestry-drive-review-20261021T020632Z/result.json). Los estados R2 históricos siguientes no sustituyen esta actualización.
 
 **EXP07 — S25 → S23:** **Termux 8023, emparejamiento y conexión S25 → Horus PASS.** El S25 entra por ProxyJump como `horus`, UID 1000, home `/home/horus`, Alpine 3.24.0 ARM64; el servidor confirma su clave y el mismo puerto de conexión 50860. Horus está **running** en `127.0.0.1:8022`; Termux conserva 8023, dos claves, Boot/alias y guardia cancelada. Tras el diagnóstico inicial del stub, el instalador oficial mostró Codex 0.163.0 y `Not logged in` en la salida aportada por el S25. El usuario confirmó después el login. Tarea Codex sintética desde S25 y verificación desde otra conexión PASS: SHA-256 nuevo exacto y tres fixtures originales intactos. ADB observó Codex como hijo de la sesión SSH en el S23. Recuperación de conversación tras reconectar confirmada por el usuario; bloqueo local de 15 minutos identificado en el código y por aclaración humana; persistencia de procesos y PC apagado pendientes. La ejecución manual del hook no prueba un reinicio. [Protocolo por fases](S25_REMOTE_ACCESS.md).

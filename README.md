@@ -48,9 +48,11 @@ not a client written entirely from scratch. See
 
 - Codex runs in Horus/Alpine ARM64 on the S23; remote access from the S25 was
   confirmed by the user after service recovery.
-- **137 offline tests:** 54 publication/browser/OAuth fixtures, 4 deployment
-  helpers, 12 recovery/polling tests, 13 pairing-boundary tests, 3 policy tests,
-  38 Git workflow tests, 9 turn-guard tests and 4 release-overlay tests.
+- **145 offline tests in the native H3 candidate:** 54 publication/browser/OAuth fixtures, 4 deployment
+  helpers, 16 recovery/polling/observation tests, 13 pairing-boundary tests,
+  3 policy tests,
+  38 Git workflow tests, 9 turn-guard tests, 4 release-overlay tests and 4
+  S23 acceptance receipt tests.
   They do not use real credentials or model inference.
 - **H2 work sessions:** explicit start/receive/finish/check commands, candidate
   validation, reviewed publication and a local lock covering child writers.
@@ -58,15 +60,27 @@ not a client written entirely from scratch. See
 - **H3 device evidence:** all 137 tests passed on Alpine ARM64; the existing
   bridge was admitted to the real project. A phone-originated receipt commit
   was published to GitHub and received/validated in WSL. A fresh native Codex
-  CLI task then verified the updated project and both session guards. S25 entry
-  remains a separate acceptance test.
+  CLI task then verified the updated project and both session guards. A later
+  authenticated loopback bridge turn verified actual command receipts, lock
+  rejection, fresh history responses and clean release. The first turn in a
+  new S25 conversation verified HEAD, lock rejection and preview. Pilot 9 fixes
+  stale selection on restart; two cold restarts retained the expected thread
+  and recovered command receipts through fresh server history. A new SSH
+  connection over cellular also passed tunnel, authorization and history checks.
 - The pinned archive and patch reproduce **68 text files** with matching hashes.
 - Live Drive publication and FolderSync transfer/read-back were separately
   exercised; the offline test suite does not stand in for those device tests.
 
 This does **not** establish 24/7 availability or reboot recovery. Background
 polling fetches references; validated application at managed CLI entry is proven.
-Entry through the S25 client/bridge remains under validation.
+Loopback bridge entry is verified with an already current checkout; applying
+another new revision through that entry remains pending. The first native H3 candidate keeps the existing source pins and backend release.
+The pilot 9 Android patch and its new pins remain preserved local changes; their
+publication and native policy transition are separate from this candidate.
+Wi-Fi-to-cellular handover did not recover fresh content; establishing a new SSH
+connection on cellular passed. Wi-Fi was restored and fresh history rechecked.
+A later Termux session ended with signal 9 and SSH required the existing startup
+helper again; the cause remains unresolved.
 The workspace policy is not an OS security sandbox. The
 full-access mode used by the personal Horus deployment is a documented exception,
 not a safe default for arbitrary projects.
@@ -86,6 +100,7 @@ node --test tools/s25-codex-client/pilot-policy.test.mjs
 python3 -B -m unittest discover -s tools -p test_work_session.py
 node --test tools/project-gate.test.mjs
 python3 -B -m unittest discover -s tools -p test_s23_project.py
+node --test tools/s23-remote-access/accept_s23.test.mjs
 ```
 
 Backend integration tests that import `../src/` belong in the reconstructed
@@ -106,14 +121,18 @@ and [source pins](tools/s25-codex-client/source-pins.json).
 
 ## Current direction
 
-Start with [current project status](STATUS.md) and the
+Start with [current project status](STATUS.md), the
+[project review and next steps](docs/PROJECT_REVIEW.md), and the
 [H2 session guide](docs/WORK_SESSIONS.md). Both independent Codex accounts can
 use the same WSL checkout in separate turns. Publication selects explicit paths;
 the default finish command previews the candidate without committing or pushing.
-Phone admission and managed CLI receipt are verified; S25 client entry remains under H3 validation.
+Phone admission, managed CLI receipt and the first turn in a new S25 conversation
+are verified. Applying a new Git candidate through the bridge remains under H3
+validation, including review of the updated source fingerprint on the phone.
 
 H3 adds a bridge turn guard using the same local checkout lock, an optional
 fetch-only task in the existing supervisor, and a device-local release overlay.
+For bounded checks using only the S23, see the [S23 diagnostic guide](docs/S23_CHECKS.md).
 See the [H3 acceptance record](docs/investigaciones/2026-10-26_codex_24x7/15_H3_NODO_S23.md)
 for device verification; code availability alone does not establish deployment.
 
