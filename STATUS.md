@@ -69,3 +69,12 @@ el procedimiento siguen siendo un riesgo cooperativo explícito.
 Al finalizar cada tarea: actualizar este estado con cambios, pruebas y próximo
 paso, revisar rutas y usar `finish` primero como previsualización. Publicar solo
 el conjunto autorizado. Mantener credenciales y conversaciones fuera de Git.
+
+
+Continuación 04/11 en curso: `dc3a872…` fue aplicado por `session.start` y
+pasó 141 tests ARM64. HEAD, BUSY y preview del turno nativo pasaron, pero el
+cierre dejó recuperación pendiente; no acepta H3. Se reprodujo una carrera
+de snapshot anterior al lock y se preparó una entrada atómica fetch-only para
+el supervisor existente, con cuatro pruebas nuevas. La recuperación se revisará
+con escritor terminado, checkout limpio y política sin cambios. S25 sobre el
+siguiente candidato y su estado final siguen pendientes. H4/H5 no avanzan.

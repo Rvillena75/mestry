@@ -702,3 +702,83 @@ reapertura fresca del mismo hilo. La interrupción se repite con descripción
 accesible dinámica. El diagnóstico causal de señal 9, handover automático y
 ventanas de disponibilidad prolongada no se convierten en ensayo de 24 h;
 H4/H5 quedan expresamente pendientes.
+
+
+## Continuación del 04/11 — recepción del candidato nativo
+
+Se publicó `dc3a872a839295e6c4d65ef2b67eab3dcba90f30` mediante preview
+con índice intacto y `finish --publish` con once rutas explícitas. El candidato
+pasó las ocho suites WSL: **141 tests** (54/4/16/13/3/38/9/4), más
+**4 tests** del comprobador de recibos. Mantiene el contrato, controles y
+pins anteriores: **68/68 fuentes reproducidas**, huella
+`ccd7a7f3068531fa87c2bad73c1416a9174d2d2dd3026c395c6edddbacfca080`.
+Los cinco archivos Android/Drive no seleccionados siguen respaldados y locales.
+
+### Primer intento conservado y conciliado
+
+El check nativo anterior confirmó `4865d2c…`, limpio/libre/idle, validación
+coincidente y sin recuperación. El fetch vio `dc3a872…` con `applied=false`.
+Se extrajo únicamente el comprobador a estado privado, se verificó su SHA-256
+`9376efc3a13c58b1163f8a0a0f06ec0b76eab2cfa70c20881d86ba2288e8e4c1`
+y se invocó sin un `start` exterior. El recibo a **03:06:19.310 UTC** confirma
+hello autenticado y fase `preparing_thread`, con **cero turnos de modelo iniciados**.
+
+A **03:09:55.979 UTC**, ActivityManager registró `Trimming phantom processes`
+y terminó el sshd de Termux y procesos de Horus. La terminal mostró `sigkill`;
+el comprobador terminó con hangup/salida 129. Este intento **no aplica ni acepta
+el candidato**: el check posterior conserva el SHA anterior, limpio/libre/idle,
+sin recuperación ni candidato fallido. Los exit-info de la app solo contienen
+registros antiguos; la atribución de esta caída se apoya en el registro actual
+de ActivityManager. No se adjudican retrospectivamente las señales del 03/11.
+
+### Recuperación acotada y repetición
+
+Se reabrió la shell normal de Horus y se recuperó SSH con el helper existente.
+Antes de reiniciar el bridge, su controlador verificó propiedad y salud, y el
+contador de metadatos registró **cero turnos/aprobaciones activos**. Se conservaron
+el recibo y la salida del primer intento en el perfil privado. Se detuvo el
+keepalive existente, se reinició únicamente el bridge propio y se restauró el
+keepalive. El controlador confirmó `MESTRY_OWNED_BRIDGE_STOPPED`, bridge listo
+y keepalive activo, sin cambiar release, pairing, estado, puertos ni política.
+Los hijos residentes de ese bridge dejaron de figurar tras el reinicio.
+
+`max_phantom_processes=32` se conserva: no se desactiva ni amplía esa protección.
+S25 abrió otra conexión por el perfil SSH guardado; el probe existente aceptó
+loopback, health y rechazos de autorización. No se cambió Wi-Fi ni se reinstaló
+ningún componente. El segundo intento se inicia después de conciliar el primero,
+con el mismo candidato y sin una aplicación CLI previa. Su resultado final se
+registra a continuación, separado del primer rechazo.
+
+
+### Segundo intento: aplicación nueva verificada; cierre incompleto
+
+La entrada `session.start` aplicó **`4865d2c…` → `dc3a872…`**, después de
+las ocho suites ARM64: **141 tests**, árbol candidato
+`0d0c8641a2ebfcb4a5ad6921ec38c408c95f5424`, validado a **03:34:16 UTC**.
+El turno propio terminó `completed`; los recibos de comandos acreditan HEAD,
+BUSY/salida 3 y preview con índice intacto. Una conexión nueva recibió
+`session.content` y `session.sync`. Esos recibos no sustituyen todavía S25.
+
+El comprobador devolvió **INCOMPLETE/salida 1** porque el estado final fue
+`recovery_required`, libre y limpio. Se conserva ese resultado; no se declara
+H3 cerrada. Los cinco comandos propios inspeccionados fueron lecturas del
+proyecto, HEAD/espera y preview. No hay nuevas órdenes de terminación por recorte
+de procesos en el registro seleccionado de este segundo intento.
+
+### Carrera reproducida y corrección de la entrada del supervisor
+
+La CLI histórica carga estado antes de intentar el lock. Se reprodujo con un
+fixture Git y una liberación limpia controlada entre esos pasos: el snapshot
+antiguo `running` produce un falso `UNCLEAN_SESSION_REVIEW_REQUIRED`. HEAD,
+índice y política permanecen iguales. Esta condición es compatible con la
+incidencia nativa; no se capturó una traza de la instrucción exacta que la marcó.
+
+`atomic_project_poll.py` toma primero el lock, carga después el estado y sigue
+siendo fetch-only. BUSY no carga ni sobrescribe al escritor; una recuperación
+real no se limpia. Cuatro tests cubren snapshot anterior, BUSY, recuperación
+real y sustitución revisada de la llamada antigua. La reproducción nueva
+devuelve salida 0/fetch-only sin aplicar. Se revisará e instalará únicamente
+esta llamada en el worker ya existente, conservando respaldo y rollback.
+La corrección no reaprobará ni cambiará la política nativa. La carrera general
+de la CLI histórica queda identificada para una transición de controles
+separada; esta entrega corrige la entrada background que opera en H3.

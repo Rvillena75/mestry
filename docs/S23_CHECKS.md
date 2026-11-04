@@ -144,3 +144,24 @@ plazos ni reconfigurar los destinos para superar una desconexión.
 Este incremento deja código/documentación locales revisados; no publica commits
 por el hecho de ejecutar las comprobaciones. Hasta una recepción explícita, el
 HEAD esperado del teléfono es el registrado en el informe 15, no el working tree WSL.
+
+
+## Entrada atómica del polling H3
+
+`atomic_project_poll.py --repo <checkout>` adquiere el lock antes de leer la
+política y el estado. Solo obtiene referencias; no aplica, repara recuperación
+ni aprueba políticas. BUSY no lee ni sobrescribe al escritor. Una recuperación
+real sigue bloqueada y requiere revisión explícita.
+
+El incremento evita que el supervisor clasifique como abandonado un snapshot
+`running` del escritor que acaba de terminar. La reproducción en un fixture Git
+conservó HEAD/índice/política: la entrada anterior devolvió
+`UNCLEAN_SESSION_REVIEW_REQUIRED`; la nueva devolvió fetch-only correcto.
+`updated_keeper_source` prepara únicamente la sustitución de esa llamada en el
+worker existente y rechaza código desconocido. No instala ni inicia nada.
+
+La instalación revisada conserva respaldo del worker, coloca el helper a su
+lado y verifica hashes. No cambia intervalo, servicio, puertos ni protecciones
+Android. La corrección corresponde a la entrada del supervisor; la CLI histórica
+conserva su lectura previa al lock y merece una transición de controles separada.
+No se reaprobará una política para limpiar la incidencia.
