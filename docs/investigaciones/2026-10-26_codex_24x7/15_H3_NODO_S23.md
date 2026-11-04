@@ -782,3 +782,41 @@ esta llamada en el worker ya existente, conservando respaldo y rollback.
 La corrección no reaprobará ni cambiará la política nativa. La carrera general
 de la CLI histórica queda identificada para una transición de controles
 separada; esta entrega corrige la entrada background que opera en H3.
+
+
+### Tercer intento rechazado por validación, sin aplicación
+
+`197aa5b99106db661395dc84cda9c093a5e0a3f1` pasó las suites previas,
+pero `workflow` devolvió `tests_failed_or_missing` a **04:19:17 UTC**.
+El bridge rechazó `session.start`, con cero turnos nuevos y sin fast-forward.
+Se conservan `dc3a872…`, limpio/libre/idle, sin recuperación y con candidato
+fallido registrado para el árbol `71a3047f…`. No se borró esa evidencia.
+Dos casos temporizados pasaron en **15,824 s**, y la suite completa nativa
+repetida con salida privada pasó **38 tests en 339,498 s**. No se capturó el
+fallo original ni se atribuye una causa a partir de la repetición correcta.
+
+### Corrección general del snapshot y transición revisada
+
+Dos regresiones WSL fallan con la entrada anterior: una liberación limpia
+parece recuperación, y una recuperación posterior al snapshot puede quedar
+oculta. Moviendo la carga de política/estado dentro del lock, ambas pasan y
+se preservan HEAD/índice/política del fixture. La suite WSL conserva los 38
+casos y añade esos dos: **40 correctos**. No se omitieron pruebas ni se amplió
+el presupuesto del validador. Se guarda ahora salida privada y acotada de
+la regla que falle, sin imprimirla en el estado público.
+
+Los dos archivos son controles protegidos. Se prepara un handoff acotado a
+esos hashes, con política futura revisada antes de entrar. Cinco tests
+comprueban rechazo de cambios no revisados/ajenos, preservación al fallar y
+una recepción real contra Git local que valida, aplica y solo después
+promueve el blob aprobado. No modifica huella de dependencias ni contrato.
+La versión anterior permanece operativa hasta completar la validación del
+candidato; no se aplica el SHA nuevo por CLI antes del bridge.
+
+
+La preparación añade tres pruebas del plan sin mutaciones, del launcher
+acotado y del rechazo fuera del perfil. El launcher y el plan se fijan por
+hash; los cambios de política se limitan a los dos controles revisados,
+sin cambiar contrato, identidad o huella de dependencias. La promoción
+consume el blob revisado; no crea otra aprobación durante la recepción.
+Se retirará ese PATH temporal antes del recorrido real S25.

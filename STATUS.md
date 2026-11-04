@@ -78,3 +78,14 @@ de snapshot anterior al lock y se preparó una entrada atómica fetch-only para
 el supervisor existente, con cuatro pruebas nuevas. La recuperación se revisará
 con escritor terminado, checkout limpio y política sin cambios. S25 sobre el
 siguiente candidato y su estado final siguen pendientes. H4/H5 no avanzan.
+
+
+Continuación de controles 04/11: la recepción de `197aa5b…` fue rechazada
+por la suite workflow; se conservan SHA anterior, árbol limpio y candidato
+fallido. Dos pruebas acotadas y una repetición completa de 38 tests nativos
+pasaron; no se estableció la causa de aquel fallo. La nueva versión mueve
+la carga de política/estado bajo lock, pasa 40 tests WSL y conserva salida
+privada del validador fallido. Cinco pruebas de transición revisada pasan,
+incluida validación, fast-forward y promoción real contra un remoto Git local.
+Antes de publicar/recibir se revisarán los hashes de los dos controles cambiados;
+no se reaprueba por defecto una política para quitar el bloqueo.

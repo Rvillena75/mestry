@@ -162,6 +162,6 @@ worker existente y rechaza código desconocido. No instala ni inicia nada.
 
 La instalación revisada conserva respaldo del worker, coloca el helper a su
 lado y verifica hashes. No cambia intervalo, servicio, puertos ni protecciones
-Android. La corrección corresponde a la entrada del supervisor; la CLI histórica
-conserva su lectura previa al lock y merece una transición de controles separada.
+Android. La entrada del supervisor se conserva. El siguiente incremento corrige también
+la CLI general, con dos regresiones y una transición revisada de sus controles.
 No se reaprobará una política para limpiar la incidencia.

@@ -303,6 +303,20 @@ class Session:
         if not set(self.cfg['pins']).issubset(present):
             raise Blocked('CANDIDATE_POLICY_FILE_MISSING')
 
+    def validation_failure(self, revision, rule, reason, output, returncode=None):
+        tree = self.text('rev-parse', revision + '^{tree}')
+        name = 'validation-failure-' + tree[:16] + '-' + digest(rule.encode())[:8] + '-' + str(time.time_ns()) + '.json'
+        # Only the failed rule is retained, outside Git and with private mode.
+        # Status exposes its reference, never the captured tool output.
+        limit = 2_000_000
+        write_private(self.directory / name, {'at': now(), 'tree': tree, 'rule': rule,
+                      'reason': reason, 'returncode': returncode,
+                      'output': output[:limit].decode('utf-8', 'replace'),
+                      'output_truncated': len(output) > limit})
+        self.record('validation_failed', failed_candidate={
+            'at': now(), 'tree': tree, 'rule': rule, 'reason': reason,
+            'private_log': name})
+
     def validate(self, revision):
         self.inspect_tree(revision)
         archive = self.git("archive", "--format=tar", revision)
@@ -330,18 +344,16 @@ class Session:
                 try:
                     result = subprocess.run(rule["argv"], cwd=destination, capture_output=True,
                                             timeout=rule.get("timeout_seconds", 120))
-                except subprocess.TimeoutExpired:
-                    self.record('validation_failed', failed_candidate={
-                        'at': now(), 'tree': self.text('rev-parse', revision + '^{tree}'),
-                        'rule': rule['name'], 'reason': 'timeout'})
+                except subprocess.TimeoutExpired as error:
+                    self.validation_failure(revision, rule['name'], 'timeout',
+                                            (error.stdout or b'') + (error.stderr or b''))
                     raise Blocked('VALIDATION_TIMEOUT_' + rule['name'].upper()) from None
                 output = result.stdout + result.stderr
                 match = re.search(rb'Ran (\d+) tests?|# tests (\d+)', output)
                 count = int(next(v for v in match.groups() if v)) if match else 0
                 if result.returncode or count < rule.get('minimum_tests', 0):
-                    self.record('validation_failed', failed_candidate={
-                        'at': now(), 'tree': self.text('rev-parse', revision + '^{tree}'),
-                        'rule': rule['name'], 'reason': 'tests_failed_or_missing'})
+                    self.validation_failure(revision, rule['name'], 'tests_failed_or_missing',
+                                            output, result.returncode)
                     raise Blocked("VALIDATION_FAILED_" + rule['name'].upper())
                 results.append({"name": rule["name"], "tests": count})
         self.state["validation"] = {"at": now(), "tree": self.text("rev-parse", revision + '^{tree}'),
@@ -630,11 +642,15 @@ def main():
             with session.lock():
                 result = session.configure()
         else:
-            session.load()
             if args.action == 'check':
+                session.load()
                 result = session.check(args.remote)
             else:
                 with session.lock():
+                    # The previous writer may finish or require recovery between
+                    # process launch and lock acquisition. Load policy/state only
+                    # after ownership (or verified within-turn borrowing).
+                    session.load()
                     try:
                         if session.state.get('phase') in ('running', 'recovery_required') and not session.borrowed:
                             session.record('unclean_session', phase='recovery_required')

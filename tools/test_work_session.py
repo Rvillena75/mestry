@@ -1,5 +1,8 @@
 """Integration checks against disposable local Git remotes; no accounts/devices."""
 import hashlib
+import contextlib
+import io
+from unittest.mock import patch
 import json
 import os
 import signal
@@ -86,6 +89,43 @@ class WorkflowIntegration(unittest.TestCase):
         self.run_git(peer, 'push', '-q', 'origin', 'main')
         return self.run_git(peer, 'rev-parse', 'HEAD')
 
+    def entry_after_writer_transition(self, before_phase, after_phase):
+        import work_session as workflow
+        state_file = self.state / 'status.json'
+        value = json.loads(state_file.read_text())
+        value['phase'] = before_phase
+        state_file.write_text(json.dumps(value))
+        # A controlled peer transition occurs at the real lock boundary.
+        # Reading state before that boundary must not authorize the operation.
+        original_lock = workflow.Session.lock
+        @contextlib.contextmanager
+        def lock_after_writer_transition(session):
+            latest = json.loads(state_file.read_text())
+            latest['phase'] = after_phase
+            state_file.write_text(json.dumps(latest))
+            with original_lock(session) as handle:
+                yield handle
+        # Only the lock boundary is interposed; policy, Git, phase guards and
+        # output use the real implementation and disposable remote.
+        before = self.head(), self.index(), (self.state / 'config.json').read_bytes()
+        args = [str(CONTROLLER), '--repo', str(self.repo), '--state-root', str(self.storage), 'receive', '--fetch-only']
+        with patch.object(workflow.Session, 'lock', lock_after_writer_transition), patch.object(sys, 'argv', args), contextlib.redirect_stdout(io.StringIO()) as output:
+            code = workflow.main()
+        self.assertEqual(before, (self.head(), self.index(), (self.state / 'config.json').read_bytes()))
+        return code, json.loads(output.getvalue().splitlines()[-1]), json.loads(state_file.read_text())
+
+    def test_entry_observes_a_writer_that_finished_before_lock_acquisition(self):
+        code, result, state = self.entry_after_writer_transition('running', 'idle')
+        self.assertEqual(code, 0, result)
+        self.assertTrue(result['fetch_only'])
+        self.assertFalse(result['applied'])
+        self.assertEqual(state['phase'], 'idle')
+
+    def test_entry_preserves_a_writer_abandoned_after_the_old_snapshot(self):
+        code, result, state = self.entry_after_writer_transition('idle', 'recovery_required')
+        self.assertEqual((code, result.get('reason')), (3, 'UNCLEAN_SESSION_REVIEW_REQUIRED'))
+        self.assertEqual(state['phase'], 'recovery_required')
+
     def test_private_configuration(self):
         self.assertEqual((self.state / 'config.json').stat().st_mode & 0o777, 0o600)
         self.assertEqual(self.state.stat().st_mode & 0o777, 0o700)
@@ -123,7 +163,15 @@ class WorkflowIntegration(unittest.TestCase):
         self.peer_commit(value='VALUE = -1\n')
         self.command('receive', blocked='VALIDATION_FAILED_FIXTURE')
         self.assertEqual((self.head(), self.index(), (self.repo / 'calc.py').read_bytes()), before)
-        self.assertEqual(self.command('check')['failed_candidate']['rule'], 'fixture')
+        failure = self.command('check')['failed_candidate']
+        self.assertEqual(failure['rule'], 'fixture')
+        log = self.state / failure['private_log']
+        self.assertEqual(log.stat().st_mode & 0o777, 0o600)
+        detail = json.loads(log.read_text())
+        self.assertNotEqual(detail['returncode'], 0)
+        self.assertIn('AssertionError', detail['output'])
+        self.assertNotIn('output', failure)
+        self.assertTrue(log.is_relative_to(self.storage))
         self.command('receive', '--fetch-only')
         self.assertEqual(self.command('check')['failed_candidate']['rule'], 'fixture')
 

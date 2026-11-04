@@ -214,3 +214,44 @@ Para consultar pendientes desde una terminal remota del S25, `check --remote`
 muestra estado local, referencia observada, validación y candidato rechazado.
 El estado del polling se conserva en el `status.json` privado del supervisor;
 ninguno de esos estados operativos se sincroniza por Drive o Git.
+
+
+## Transición acotada de controles para H3
+
+La entrada nueva carga política/estado **después de adquirir el lock**, también
+cuando verifica un préstamo `--within-turn`. Dos regresiones cubren la liberación
+limpia y una recuperación aparecida entre el snapshot antiguo y la adquisición.
+Un fallo de suite conserva únicamente la salida de esa regla, acotada a 2 MB y
+modo 600 fuera de Git; `check` informa la referencia privada y no su contenido.
+
+`reviewed_workflow_handoff.py` consume un plan privado, revisado y fijado por
+SHA-256, para una pareja exacta de commits. Solo admite cambios de pins en
+`work_session.py` y `test_work_session.py`; contrato, entorno/dependencias,
+remoto, identidad y resto de controles deben seguir iguales. No crea una
+aprobación ni invoca `configure`.
+
+El plan contiene la política futura ya revisada. El bridge valida la copia
+candidata con esos hashes mientras conserva checkout/política anteriores.
+Solo tras el fast-forward gestionado promueve ese mismo blob aprobado, verifica
+el nuevo checkout y guarda un recibo privado. Un fallo previo conserva la
+versión anterior; una promoción incompleta conserva recuperación, sin reset.
+El código de compatibilidad se usa mediante un launcher privado solo durante
+la entrada del bridge y se retira de PATH antes del ensayo S25. El launcher
+y el plan no se copian entre cuentas ni incluyen credenciales.
+
+Esta transición es una operación revisada del despliegue existente, no un
+instalador genérico ni un modo de aceptar dependencias nuevas automáticamente.
+Conservar backups y probar el SHA exacto; no usarla para silenciar un bloqueo
+que aún no fue conciliado.
+
+
+La preparación de esa transición se hace con `prepare_workflow_handoff.py`,
+solo en el perfil/ruta admitidos y con `--review`, SHA anterior/nuevo y los
+dos hashes de fuente esperados. Conserva backup, no escribe política ni HEAD
+y activa un launcher privado únicamente en el PATH del bridge existente.
+El launcher fija por hash el adaptador y su plan y deja intactos los demás
+comandos Python. Tras verificar la recepción y terminar el turno,
+`--restore-launcher <directorio de revisión> --review` reinicia el bridge
+propio sin ese PATH temporal; no revierte la política ya promovida ni Git.
+Cada reinicio exige cero turnos/aprobaciones y comprueba preservación de
+release, pairing, índice e hilos. Los recibos/planes quedan privados.
