@@ -1,5 +1,26 @@
 # Revisión del estado de MESTRY — 04/11/2026
 
+**Lector Drive activo — 08/11/2026:** consentimiento `drive.readonly` completado,
+raíz MESTRY fijada por ID y token separado del publicador. Renovación nativa,
+lectura real, cache hit y recuperación offline verificados. 211 tests WSL /
+68 de candidata S23 correctos. El inventario/caché aún avanzan por lotes.
+[Estado y límites](DOCUMENT_READER_AUTH.md). Los cortes inferiores conservan su fecha.
+
+**Incremento documental — 08/11/2026:** sincronización incremental bajo demanda,
+caché SQLite durable, recuperación offline e historial de texto implementados y
+activados en Termux/S23. **196 pruebas WSL y 53 de candidata S23 correctas**.
+Inventario y changes reales pasaron; la raíz seleccionada devuelve 0 documentos
+visibles, por lo que contenido real y UI S25 siguen pendientes de aceptación.
+RAG continúa pendiente de revisión. [Operación, evidencia y límites](DOCUMENT_SYNC.md).
+
+**Complemento — 08/11/2026:** la [auditoría de Drive](DRIVE_IMPLEMENTATION_AUDIT.md)
+contrasta código, estados históricos y criterios del ADR. Nueve suites locales:
+163 tests correctos (cuatro corresponden a auxiliares no versionados). Sin nueva
+prueba de teléfonos. Navegador bajo demanda implementado; sincronización
+incremental y RAG pendientes; publicación bloqueada en el último registro por
+destino fuera de Review. La sección histórica del 03/11 conserva sus pendientes
+H3, resueltos según el recibo del 04/11 al inicio de este documento.
+
 **H3 aceptada para el recorrido definido.** Una revisión distinta se validó y
 aplicó por el bridge y una tarea real S25 trabajó sobre ella. El
 [recibo](validation/H3_BRIDGE_ACCEPTANCE_20261104.md) reúne versiones, suites,

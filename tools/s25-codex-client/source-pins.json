@@ -1,11 +1,11 @@
 {
   "upstream_commit": "538d65f67e34907789237fc71f56e8ca95d9f3cb",
   "upstream_archive_sha256": "ff8d68e74d4045268a80dde2d9e55f6e131825ee14ddac2a2e5b4dd40dff501e",
-  "patch_sha256": "342b44089b8ce39876b4b4f723fb480bbaf4c93825da8bf5995d84facff8401b",
+  "patch_sha256": "5c62a6190092e48da4858d6923ca0f8d9d3b41e958f4ab0810d0c6b04290eb39",
   "changed_text_files": {
     "android/app/build.gradle.kts": {
       "before_sha256": "3056404ce38f18f27f5597135f86e74352eb99f2b096737f2359f4333bfea465",
-      "after_sha256": "77382d779abe3f0068992ec663da9c3d07f3b85166dfae5f640ff57875ab69ef"
+      "after_sha256": "8709d2be5fef77847151c48778944b76ffc8dbf7d1617f6e6cb768bf090ce58a"
     },
     "android/app/src/main/AndroidManifest.xml": {
       "before_sha256": "53e698c123004fb1e072d0ac58d4fafcedc6d7c4250e042ea95f1e38a01b7760",
@@ -165,11 +165,11 @@
     },
     "android/app/src/main/java/com/haochen/codexremote/MainActivitySessionCacheController.kt": {
       "before_sha256": "2ff7e7b0ae237666fd6ff1980a03066ea95d12e58f8620bf0d70ce0ebb06b68c",
-      "after_sha256": "29ec9b0be334967f7a3523ffba4b1c397c184172ab5826eb16d8259d92d6fce5"
+      "after_sha256": "270983aceed2b917c7017557b524ccfeaecd878d5becb422eb5f6af5bc814ecc"
     },
     "android/app/src/main/java/com/haochen/codexremote/MainActivitySessionController.kt": {
       "before_sha256": "6becbee37ae724c2e8ee7fa3208622a1aabd2df02d6fdbee56c6ec81d9260247",
-      "after_sha256": "7bf0f3af386cf10d05f3c8320a64a4cbef26a5e3f6197135b5280513f0ee3577"
+      "after_sha256": "6b0c8319b51b52852bf74f76005c437e1892ad68009406f244651e8fc6724215"
     },
     "android/app/src/main/java/com/haochen/codexremote/MainActivitySettingsController.kt": {
       "before_sha256": "a4df229faeec39144a8e717829e5103f749f2fdf77670294a28d1a386454729b",

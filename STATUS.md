@@ -1,5 +1,39 @@
 # Estado para continuar MESTRY
 
+**Lector activo — 08/11/2026:** consentimiento Google completado con scope exacto
+`drive.readonly`, raíz MESTRY fijada por ID y token separado del publicador.
+Renovación nativa de ambos grants comprobada; token escritor preservado.
+**211 pruebas WSL** con fuentes intactas y **68 de candidata S23** correctas.
+Primer lote real: 99 elementos descubiertos, texto leído, segunda lectura sin
+descarga y copia offline con hash coincidente. Último checkpoint: 3.992 elementos,
+7 textos listos y 3.216 trabajos pendientes sin errores. El inventario/caché
+siguen incompletos por lotes; trabajador acotado cerrado, sin daemon nuevo. UI S25 pendiente. [Detalle](docs/DOCUMENT_READER_AUTH.md).
+
+**Desarrollo documental — 08/11/2026:** sincronización incremental bajo demanda,
+caché durable y recuperación de texto/historial implementados y activados en S23.
+196 tests WSL con fuentes intactas y 53 de candidata S23 correctos. Drive real:
+inventario/cursor verificados; raíz seleccionada sin documentos visibles. Contenido
+real y UI S25 pendientes. H4 avanza parcialmente; H5 no cambia.
+[Operación, evidencia y límites](docs/DOCUMENT_SYNC.md).
+
+**Prioridad revisada — 08/11/2026:** RAG queda **PENDIENTE DE REVISIÓN**.
+El usuario anticipa poco uso en el producto final; su implementación no se
+considera un siguiente paso comprometido. Antes de retomarla, revisar casos de
+uso reales y si la lectura/búsqueda directa de archivos ya los resuelve. Esto no
+elimina ni modifica el ADR congelado: una eventual exclusión definitiva de RAG
+requiere registrar la decisión arquitectónica correspondiente.
+
+**Corte anterior al desarrollo — auditoría del 08/11/2026:** código y nueve suites offline revisados:
+163 tests correctos, incluidos cuatro tests de auxiliares locales no versionados.
+No es una nueva aceptación de dispositivos. Drive ofrece lectura bajo demanda
+y publicación Markdown acotada; **sin sincronización incremental, caché
+documental ni RAG**. Último registro de publicación: bloqueada por destino fuera
+de Review (03/11), con fixture legible; estado remoto actual no verificado.
+[Informe, matriz D/AC e incremento propuesto](docs/DRIVE_IMPLEMENTATION_AUDIT.md).
+No se implementó H4/H5 ni se alteraron los cinco cambios locales previos.
+
+## Corte histórico H3 — 04/11/2026
+
 Actualizado: **04/11/2026**. Código/documentación técnica: este repositorio.
 Originales seleccionados: Drive según el ADR congelado.
 

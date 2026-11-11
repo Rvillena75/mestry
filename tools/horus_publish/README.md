@@ -1,5 +1,18 @@
 # Publicación privada Horus → Drive — piloto
 
+**Lector Drive activo — 08/11/2026:** consentimiento `drive.readonly` completado,
+raíz MESTRY fijada por ID y token separado del publicador. Renovación nativa,
+lectura real, cache hit y recuperación offline verificados. 211 tests WSL /
+68 de candidata S23 correctos. El inventario/caché aún avanzan por lotes.
+[Estado y límites](../../docs/DOCUMENT_READER_AUTH.md). Los cortes inferiores conservan su fecha.
+
+**Actualización del 08/11/2026:** el lector incorpora sincronización incremental
+bajo demanda, caché SQLite durable y recuperación de texto/historial.
+Backend activado en S23; **91 pruebas de esta carpeta en WSL**, incluidas las
+33 nuevas y los cuatro auxiliares locales previos. La candidata S23 pasó 53.
+La raíz autorizada devuelve 0 documentos; contenido real y S25 pendientes.
+[Operación y límites](../../docs/DOCUMENT_SYNC.md). El publicador conserva su contrato.
+
 **Estado vigente, navegador Drive:** MESTRY está autorizada por Picker y asignada
 al proyecto de prueba; refresh HTTPS nativo comprobado con el cliente de escritorio
 existente y solo `drive.file`. La raíz no muestra aún documentos autorizados.

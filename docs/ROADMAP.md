@@ -1,5 +1,23 @@
 # Roadmap condicionado por evidencia
 
+**Incremento documental — 08/11/2026:** sincronización incremental bajo demanda,
+caché SQLite durable, recuperación offline e historial de texto implementados y
+activados en Termux/S23. **196 pruebas WSL y 53 de candidata S23 correctas**.
+Inventario y changes reales pasaron; la raíz seleccionada devuelve 0 documentos
+visibles, por lo que contenido real y UI S25 siguen pendientes de aceptación.
+RAG continúa pendiente de revisión. [Operación, evidencia y límites](DOCUMENT_SYNC.md).
+
+El lector `drive.readonly` ya está autorizado y activo; contenido real y cache hit
+verificados. Continuar el inventario/caché por lotes y aceptar UI S25; no repetir
+consentimiento ni ampliar más scopes. [Validación](DOCUMENT_READER_AUTH.md).
+
+**Prioridad revisada — 08/11/2026:** RAG queda **PENDIENTE DE REVISIÓN**.
+El usuario anticipa poco uso en el producto final; su implementación no se
+considera un siguiente paso comprometido. Antes de retomarla, revisar casos de
+uso reales y si la lectura/búsqueda directa de archivos ya los resuelve. Esto no
+elimina ni modifica el ADR congelado: una eventual exclusión definitiva de RAG
+requiere registrar la decisión arquitectónica correspondiente.
+
 ## Seguimiento vigente — 04/11/2026
 
 [Recibo H3](validation/H3_BRIDGE_ACCEPTANCE_20261104.md),

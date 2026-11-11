@@ -1,5 +1,43 @@
 # Document Service: sincronización, revisión Markdown y RAG
 
+**Lector Drive activo — 08/11/2026:** consentimiento `drive.readonly` completado,
+raíz MESTRY fijada por ID y token separado del publicador. Renovación nativa,
+lectura real, cache hit y recuperación offline verificados. 211 tests WSL /
+68 de candidata S23 correctos. El inventario/caché aún avanzan por lotes.
+[Estado y límites](DOCUMENT_READER_AUTH.md). Los cortes inferiores conservan su fecha.
+
+**Incremento documental — 08/11/2026:** sincronización incremental bajo demanda,
+caché SQLite durable, recuperación offline e historial de texto implementados y
+activados en Termux/S23. **196 pruebas WSL y 53 de candidata S23 correctas**.
+Inventario y changes reales pasaron; la raíz seleccionada devuelve 0 documentos
+visibles, por lo que contenido real y UI S25 siguen pendientes de aceptación.
+RAG continúa pendiente de revisión. [Operación, evidencia y límites](DOCUMENT_SYNC.md).
+
+El corte de auditoría siguiente precede al desarrollo descrito arriba.
+
+**Prioridad revisada — 08/11/2026:** RAG queda **PENDIENTE DE REVISIÓN**.
+El usuario anticipa poco uso en el producto final; su implementación no se
+considera un siguiente paso comprometido. Antes de retomarla, revisar casos de
+uso reales y si la lectura/búsqueda directa de archivos ya los resuelve. Esto no
+elimina ni modifica el ADR congelado: una eventual exclusión definitiva de RAG
+requiere registrar la decisión arquitectónica correspondiente.
+
+**Estado auditado — 08/11/2026:** existen un navegador bajo demanda y un publicador
+Markdown acotado; **no hay motor incremental, caché documental ni RAG implementados**.
+La lectura vuelve a descargar/exportar cada vez. Los cursores, SQLite/FTS,
+WorkManager y extracción descritos más abajo son diseño, no capacidades instaladas.
+
+La revisión del 03/11 registra un fixture restaurado legible, pero publicación
+bloqueada por destino fuera de Review; no se comprobó el estado remoto hoy.
+La asignación del navegador no redirige el escritor. Véase la
+[auditoría de implementación](DRIVE_IMPLEMENTATION_AUDIT.md), con recorrido,
+D-01–D-15, AC-01–AC-12, pruebas y siguiente incremento propuesto.
+
+## Antecedentes fechados y diseño propuesto
+
+Los estados “pendiente”, “inactivo” o “en curso” de los párrafos del 19–21/10
+se conservan como antecedentes de esas fechas; no sustituyen el corte anterior.
+
 **Publicación real validada — 2026-10-21 UTC:** perfil SSH Horus → clave exclusiva limitada → SSH Termux existente 8023 → Drive nativo con `drive.file`. Dos revisiones privadas en Review/Horus, reintento que reutiliza ID, contenido anterior intacto tras la nueva revisión, hashes completos verificados independientemente y lectura S25 confirmada. Cuenta y refresh en S23 reales; pruebas de restricciones SSH según salida del usuario. Se está cerrando el estado OAuth de producción para quitar el límite de siete días de Testing. [Operación y límites](HORUS_DRIVE_PUBLISH.md), [resultado](validation/mestry-horus-drive-live-20261021T040010Z/result.json). El movimiento inicial de carpeta requirió acción manual tras fallos API; el runtime de publicación no usa ese movimiento ni un proceso del PC. Solo un documento sintético autorizado, sin corpus, comentarios, tareas nuevas al modelo o frontend Android instalado. Los estados de preparación siguientes son históricos; el servicio documental completo y el RAG continúan pendientes.
 
 **Preparación del publicador, 2026-10-21 UTC:** [implementación acotada y configuración Google](../tools/horus_publish/README.md) copiada a Termux, inactiva. Horus ejecuta Codex en UID Android 10350 y el publicador vive en Termux UID 10348; esto adapta la ubicación del controlador, conservando la separación de OAuth respecto al agente que exigía R2. Una clave exclusiva de comando forzado utilizará SSH 8023; todavía no se ha registrado ni probado. Runtime sin paquetes nuevos, OAuth inicial con biblioteca oficial en WSL y renovación nativa posterior en S23. 26 tests WSL / 25 S23 correctos y un test solo WSL omitido; APIs simuladas, no publicación real. El usuario prepara el cliente Google de escritorio con solo `drive.file`; callback WSL temporal pendiente de aprobación explícita. Cuenta y selección fijas, ID Drive persistido antes de subir, nuevas revisiones sin overwrite y verificación de metadata/privacidad/bytes. [Evidencia](validation/mestry-horus-publish-20261021T033650Z/manifest.json). OAuth, movimiento de carpeta app-owned a Review, SSH forzado, renovación real y funcionamiento sin PC quedan pendientes. El diseño R2 de servicio Android completo y RAG no se presenta como implementado.

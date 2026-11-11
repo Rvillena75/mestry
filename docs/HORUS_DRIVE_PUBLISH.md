@@ -1,5 +1,23 @@
 # Publicación desde Horus a Drive
 
+**Actualización del lector — 08/11/2026:** el navegador incorpora
+[sincronización incremental y caché durable](DOCUMENT_SYNC.md), activados en S23.
+Esto no modifica el publicador, su destino ni su bloqueo documentado. La aceptación
+de contenido real sigue pendiente porque la raíz seleccionada devuelve 0 documentos.
+
+**Corte documental — 08/11/2026:** los PASS siguientes son ensayos históricos.
+El registro posterior del 03/11 en [PROJECT_REVIEW](PROJECT_REVIEW.md) informa
+lectura verificada de un fixture restaurado, pero publicador bloqueado por padre
+distinto de Review. La afirmación del 22/10 sobre papelera no acredita el estado
+actual. Hoy no se consultó la cuenta ni se probó publicación; no restaurar,
+mover ni reautorizar por interpretar este manual como diagnóstico vivo.
+
+El navegador y el publicador conservan destinos independientes. No existe
+sincronización incremental ni caché RAG. [Auditoría de implementación,
+criterios MVP y brechas](DRIVE_IMPLEMENTATION_AUDIT.md).
+
+## Registro de pilotos y operación acotada
+
 **Estado vigente tras el selector Drive, 2026-10-21:** el usuario eligió **MESTRY**
 como raíz principal de consulta y completó Picker con el mismo cliente y
 `drive.file`. Renovación HTTPS nativa y carpeta no eliminada verificadas. La app

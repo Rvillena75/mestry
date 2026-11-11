@@ -1,8 +1,11 @@
 # Piloto Android S25 → Codex en Horus
 
-**Incremento VPN del 2026-10-22, en validación:** Android piloto8 instalado, misma
-firma y datos. [Estado del acceso privado](../s23-remote-access/README.md) y
-[evidencia actual](../../docs/validation/mestry-s23-remote-access-20261022T034500Z/HANDOFF.md).
+**Actualización del 2026-11-03:** Android piloto 9 instalado con la misma firma,
+permisos, UID y datos. Corrige la selección de conversación después de reabrir.
+Primer turno de un hilo nuevo, dos reaperturas e historial por datos móviles
+verificados. [Registro vigente y límites](../../docs/investigaciones/2026-10-26_codex_24x7/15_H3_NODO_S23.md).
+El [incremento VPN anterior](../../docs/validation/mestry-s23-remote-access-20261022T034500Z/HANDOFF.md)
+conserva su fecha y alcance.
 
 **Entrega Drive anterior, piloto7:** app y bridge actualizados; MESTRY activa y
 asignada, etiqueta y navegador comprobados en el S25. Conversaciones conservadas.
@@ -17,10 +20,15 @@ un ensayo físico separado.
 
 ## Estado comprobado
 
-- **APK instalado: 0.2.0-mestry-pilot8 / 10008**, mismo applicationId
+- **APK instalado: 0.2.0-mestry-pilot9 / 10009**, mismo applicationId
   `com.haochen.codexremote.mestrypilot` y firma personal. Actualización sin borrar
   datos ni renovar emparejamiento; `compileDebugKotlin` y `assembleDebug` pasan.
   Fuente reproducible: 68 archivos modificados, huellas en `source-pins.json`.
+  La selección se guarda junto con la lista y una preferencia reciente válida
+  prevalece sobre el índice de caché antiguo de esa conexión. Solo cambian dos
+  controladores Kotlin y la versión; dependencias y backend permanecen iguales.
+  El parche se reaplicó desde el archivo fijado y los 68 hashes coincidieron;
+  `assembleDebug` offline y las 148 pruebas actuales pasaron.
 - **Drive en la app:** selector, asignación por proyecto dentro de su tarjeta,
   navegación de subcarpetas, paginación y vista previa de texto/Markdown/Docs.
   La raíz **MESTRY** quedó autorizada con Google Picker y asignada a
@@ -33,9 +41,10 @@ un ensayo físico separado.
   permisos; desactivar no elimina archivos ni revoca Google. Solo `drive.file`;
   autorizar una carpeta no garantiza acceso a todos sus descendientes.
 - La asignación Drive es para consultar documentos: **no mueve ni sincroniza el
-  workspace y no cambia el destino del publicador anterior**. Su antigua carpeta
-  Horus está en la papelera por decisión del usuario; no se restauró ni se
-  redirigió automáticamente el publicador. El usuario preparará su directorio.
+  workspace y no cambia el destino del publicador anterior**. El 03/11 se
+  restauraron solo carpeta y revisión autorizadas y se verificó su lectura.
+  Google cambió el padre de la carpeta: el publicador sigue bloqueado por destino
+  distinto de Review. No se cambió su configuración ni se restauró el ancestro.
 - **Actividad desplegable bajo cada mensaje del usuario:** comentarios,
   razonamiento y acciones disponibles en app-server, con comandos/salidas y
   cambios de archivos. La respuesta final queda fuera. No se inventan avisos o
@@ -59,10 +68,11 @@ un ensayo físico separado.
   también pasan sobre el código instalado en S23. En el APK: 8 casos de actividad
   y 6 de metadata; firma/compilación y controles visuales en S25. El túnel solo
   loopback y los rechazos HTTP/WS sin clave válida se comprobaron de nuevo.
-- Las tareas, interrupción y recuperación anteriores siguen registradas en su
-  evidencia histórica; no se inició ningún turno de modelo en este incremento.
-  PC apagado, reposo prolongado, Boot real y renovación tras más de siete días
-  conservan sus pruebas físicas pendientes.
+- Las verificaciones Drive/actividad anteriores conservan su alcance histórico.
+  El 03/11 se ejecutaron turnos reales de lectura en el proyecto admitido
+  `/workspace/projects/mestry`; PC apagado, Boot real y duración 24/7 siguen
+  pendientes. El cambio directo de red no pasó; una conexión SSH nueva por datos
+  móviles sí recuperó historial fresco. No se modificaron las políticas VPN.
 
 [Entrega y evidencia actuales](../../docs/validation/mestry-s25-drive-ui-20261021T200418Z/HANDOFF.md).
 [Entrega anterior r4](../../docs/validation/mestry-s25-resumed-20261021T154810Z/HANDOFF.md).

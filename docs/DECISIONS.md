@@ -1,5 +1,15 @@
 # Registro de decisiones y propuestas
 
+**P03 parcialmente resuelta — 08/11/2026:** el usuario autorizó explícitamente
+`drive.readonly` para un lector separado, limitado por código a la raíz MESTRY
+y sus descendientes antiguos/nuevos. Google otorga lectura de toda la cuenta;
+la restricción por carpeta es de la aplicación. Consentimiento y renovación
+nativa de ambos grants verificados; token escritor `drive.file` preservado.
+No se modifica el ADR congelado ni se autoriza escritura general, otra raíz,
+envío del corpus al modelo o retención ilimitada. RAG sigue pendiente de revisión.
+[Implementación, pruebas y límites](DOCUMENT_READER_AUTH.md). Los pendientes
+históricos P03 siguientes sólo se resuelven en ese alcance.
+
 **Ajuste de alcance posterior — Drive/S25, 2026-10-21:** el usuario indica que no utiliza comentarios en archivos Markdown y no necesita ese circuito. El piloto actual prioriza abrir, editar y conservar versiones de documentos seleccionados; los comentarios y V13 quedan opcionales y dejan de bloquear la integración autónoma del S23 y la app Android del S25. Esto no declara implementadas esas capacidades ni convierte un comentario en autorización. Las referencias históricas a revisión por comentarios siguientes se conservan como diseño anterior.
 
 **R2 — 2026-10-19. Ninguna arquitectura ha sido aprobada.** Autoridad: especificación inicial y aclaración actual del usuario. Las observaciones de documentación/código están en [EVIDENCE](EVIDENCE.md), no son resultados de pruebas.

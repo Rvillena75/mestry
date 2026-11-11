@@ -1,5 +1,42 @@
 # Arquitectura de referencia propuesta
 
+**Lector Drive activo — 08/11/2026:** consentimiento `drive.readonly` completado,
+raíz MESTRY fijada por ID y token separado del publicador. Renovación nativa,
+lectura real, cache hit y recuperación offline verificados. 211 tests WSL /
+68 de candidata S23 correctos. El inventario/caché aún avanzan por lotes.
+[Estado y límites](DOCUMENT_READER_AUTH.md). Los cortes inferiores conservan su fecha.
+
+**Incremento documental — 08/11/2026:** sincronización incremental bajo demanda,
+caché SQLite durable, recuperación offline e historial de texto implementados y
+activados en Termux/S23. **196 pruebas WSL y 53 de candidata S23 correctas**.
+Inventario y changes reales pasaron; la raíz seleccionada devuelve 0 documentos
+visibles, por lo que contenido real y UI S25 siguen pendientes de aceptación.
+RAG continúa pendiente de revisión. [Operación, evidencia y límites](DOCUMENT_SYNC.md).
+
+**Prioridad revisada — 08/11/2026:** RAG queda **PENDIENTE DE REVISIÓN**.
+El usuario anticipa poco uso en el producto final; su implementación no se
+considera un siguiente paso comprometido. Antes de retomarla, revisar casos de
+uso reales y si la lectura/búsqueda directa de archivos ya los resuelve. Esto no
+elimina ni modifica el ADR congelado: una eventual exclusión definitiva de RAG
+requiere registrar la decisión arquitectónica correspondiente.
+
+**Lectura operativa — 08/11/2026:** el prototipo implementado conecta cliente
+S25 → bridge Horus/S23 → capacidad SSH → broker documental Termux.
+H3 tiene aceptación fechada el 04/11; no se volvió a probar el teléfono hoy.
+Core, Document Service Android completo, sincronización incremental, RAG y Free
+Model Broker integrados siguen pendientes. La separación de OAuth existe entre
+UIDs Termux/Horus; Keystore no está implementado en el broker Python.
+
+La publicación del piloto es histórica; la revisión del 03/11 registra destino
+fuera de Review y escritura bloqueada, con fixture legible. El navegador sólo
+consulta bajo demanda. [Auditoría y comparación con el ADR](DRIVE_IMPLEMENTATION_AUDIT.md).
+
+## Diseño y antecedentes históricos
+
+Los párrafos siguientes conservan las fechas de preparación y validación.
+Las frases “OAuth pendiente” o “frontend sin ensayo” describen aquellos cortes,
+no el estado posterior. Los diagramas R2 son propuestas; no inventario desplegado.
+
 **Ruta documental ya probada — 2026-10-21 UTC:** cliente CLI del perfil SSH Horus (UID Android 10350) solicita publicar por clave exclusiva de comando forzado, loopback/SSH Termux 8023. Receptor nativo Termux (UID 10348) conserva OAuth y journal privados, renueva el token y publica otro archivo por revisión. Dos revisiones e idempotencia comprobadas contra Drive real y lectura S25 confirmada. Cierre del estado OAuth continuo en curso; PC físicamente apagado, continuidad 24/7 y frontend Android aún sin ensayo. [Uso, separación y límites](HORUS_DRIVE_PUBLISH.md). El resto del diseño conserva sus estados históricos y no equivale a una app Document Service, corpus/RAG o cliente visual implementados.
 
 **Adaptación vigente del piloto documental — 2026-10-21 UTC:** el desarrollo funciona en **Horus**, UID Android 10350; Termux es UID 10348, con SSH existente 8023. Se preparó un publicador nativo Python en ese UID separado, con OAuth privado y una capacidad de publicación mediante clave de comando forzado exclusiva de Horus. Así se conserva la separación agente/controlador sin construir todavía la app documental Android propuesta debajo. Solo un Markdown sintético, revisiones nuevas e IDs reservados; sin corpus, RAG ni comentarios. Autorización inicial oficial de Google en WSL, token enviado privadamente a Termux y runtime posterior independiente del PC. Código copiado e inactivo y tests offline correctos; **OAuth, clave restringida y publicación real pendientes**. [Contrato, límites y pasos](../tools/horus_publish/README.md), [evidencia](validation/mestry-horus-publish-20261021T033650Z/manifest.json). La ubicación histórica Codex/Termux del diagrama R2 siguiente ya no describe este runtime. No usar PRoot como prueba de aislamiento ni ampliar la excepción Horus a ejecutar Codex en Termux junto a OAuth.

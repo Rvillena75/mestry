@@ -1,4 +1,5 @@
 import copy
+import contextlib
 import hashlib
 import json
 import os
@@ -169,9 +170,10 @@ class DriveBrowserTests(unittest.TestCase):
     def test_default_state_does_not_write_publisher_journal(self):
         with tempfile.TemporaryDirectory() as temp:
             path = Path(temp); db = path / "journal.sqlite3"
-            with sqlite3.connect(db) as conn:
+            with contextlib.closing(sqlite3.connect(db)) as conn:
                 conn.execute("CREATE TABLE folder(singleton INTEGER, file_id TEXT)")
                 conn.execute("INSERT INTO folder VALUES (1, ?)", (ROOT,))
+                conn.commit()
             os.chmod(db, 0o600)
             before = hashlib.sha256(db.read_bytes()).hexdigest()
             self.assertEqual(browser.load_state(path), self.state)

@@ -119,6 +119,9 @@ def list_page(drive, query, token=""):
 
 
 def state_response(drive, state):
+    if hasattr(drive, "allowed_roots"):
+        from document_reader import reader_state
+        return reader_state(drive, state)
     folders, seen, token = [], set(), ""
     for _ in range(5):
         page = list_page(drive, "mimeType='" + FOLDER_MIME + "'", token)
@@ -180,6 +183,8 @@ def handle(drive, state, obj, save):
     if op == "folder.enable":
         value = obj["folder_id"]
         if obj["enabled"]:
+            if hasattr(drive, "allowed_roots") and value not in drive.allowed_roots:
+                raise PublishError("READER_ROOT_NOT_SELECTED")
             metadata(drive, value, folder=True)
             if value not in state["enabled"]:
                 if len(state["enabled"]) >= 32:
@@ -238,6 +243,80 @@ def main():
         private_path(lock_path)
         fcntl.flock(lock, fcntl.LOCK_EX)
         state = load_state(STATE)
-        drive = Drive()
-        require_account(drive)
-        return handle(drive, state, obj, lambda value: write_private(STATE / "drive-browser.json", json.dumps(value).encode()))
+        from drive_sync import transient
+        try:
+            from document_reader import open_reader
+            drive = open_reader()
+            require_account(drive)
+        except Exception as error:
+            if not transient(error):
+                if obj["op"] in {"list", "read"}:
+                    from drive_sync import selected_store
+                    from publisher import ACCOUNT
+                    with selected_store(STATE, ACCOUNT, obj["root_id"]) as store:
+                        with store.db:
+                            store.set("blocked", 1)
+                raise
+            drive = None
+        return cached_handle(drive, state, obj, lambda value: write_private(STATE / "drive-browser.json", json.dumps(value).encode()))
+
+def cached_handle(drive, state, obj, save, *, base=STATE, account=None):
+    """Keep the existing bridge wire contract; list refreshes, read caches."""
+    from drive_sync import DriveAPI, selected_store, transient
+    from publisher import ACCOUNT
+    account = account or ACCOUNT
+    if obj["op"] not in {"list", "read"}:
+        if drive is None:
+            raise PublishError("DRIVE_OFFLINE")
+        return handle(drive, state, obj, save)
+    root = obj["root_id"]
+    from document_reader import load_selection
+    marker = Path(base) / "reader/selection.json"
+    allowed = getattr(drive, "allowed_roots", None)
+    if marker.exists() or marker.is_symlink():
+        allowed = load_selection(base)["roots"]
+    if allowed is not None and root not in allowed:
+        raise PublishError("READER_ROOT_NOT_SELECTED")
+    if root not in state["enabled"]:
+        raise PublishError("DRIVE_FOLDER_DISABLED")
+    with selected_store(base, account, root) as store:
+        if obj["op"] == "read":
+            return store.read(DriveAPI(drive) if drive else None, obj["file_id"], offline=drive is None)
+        offline = drive is None
+        if drive is not None:
+            try:
+                result = handle(drive, state, obj, save)
+                result["sync"] = store.sync(DriveAPI(drive), page_budget=12, job_budget=12)
+                result["offline"] = False
+                return result
+            except Exception as error:
+                if not transient(error):
+                    if isinstance(error, PublishError) and str(error) in {
+                            "DRIVE_FILE_NOT_GRANTED_OR_UNAVAILABLE", "DRIVE_FILE_UNAVAILABLE",
+                            "DRIVE_ITEM_OUTSIDE_ENABLED_FOLDER"}:
+                        with store.db:
+                            store.unavailable(obj["folder_id"])
+                    # Propagate root revocation into durable state as well.
+                    try:
+                        store.verify_root(DriveAPI(drive))
+                    except Exception:
+                        pass
+                    raise
+                offline = True
+        if obj["page_token"]:
+            raise PublishError("DRIVE_OFFLINE_PAGINATION_UNAVAILABLE")
+        folder_id = obj["folder_id"]
+        if folder_id == root:
+            raw = store.get("root_meta")
+            meta = json.loads(raw) if raw else None
+        else:
+            row = store.db.execute("SELECT meta,status FROM nodes WHERE id=?", (folder_id,)).fetchone()
+            meta = json.loads(row["meta"]) if row and row["status"] == "folder" else None
+        if not meta or meta.get("mimeType") != FOLDER_MIME:
+            raise PublishError("SYNC_FOLDER_NOT_AVAILABLE")
+        files = store.listing(folder_id)
+        # Existing clients render names, but may ignore new freshness fields.
+        files = [dict(item, name="[Copia local sin verificar] " + item["name"]) for item in files]
+        return {"status": "OK", "folder": public_file(meta), "files": files,
+                "next_page_token": "", "incomplete": True, "offline": offline,
+                "freshness": "cached_unverified", "sync": store.status()}

@@ -15,7 +15,7 @@ from oauth_setup import validate_client
 SOURCE = Path(__file__).resolve().parent
 HOST_KEY = "ssh-ed25519 CONFIGURE_LOCAL_PUBLIC_KEY"
 HOST_FP = "SHA256:CONFIGURE_LOCAL_FINGERPRINT"
-FILES = ("publisher.py", "oauth_setup.py", "client.py", "requirements.txt", "test_publish.py", "drive_browser.py", "drive_client.py", "test_drive_browser.py")
+FILES = ("publisher.py", "oauth_setup.py", "client.py", "requirements.txt", "test_publish.py", "drive_browser.py", "drive_client.py", "test_drive_browser.py", "drive_sync.py", "document_sync.py", "document_reader.py")
 SSH = ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10", "-o", "StrictHostKeyChecking=yes",
        "-o", "ControlMaster=no", "-o", "ControlPath=none", "-o", "IdentityAgent=none", "mestry-s23"]
 
@@ -39,7 +39,7 @@ if (state/"token.json").exists(): raise SystemExit("ACTIVE_INSTALL_NO_AUTOMATIC_
 host_key = pathlib.Path(os.environ["PREFIX"]+"/etc/ssh/ssh_host_ed25519_key.pub").read_text().split()
 host_key = " ".join(host_key[:2])
 if host_key != payload["host_key"]: raise SystemExit("HOST_KEY_MISMATCH")
-allowed = {"publisher.py", "oauth_setup.py", "client.py", "requirements.txt", "test_publish.py", "drive_browser.py", "drive_client.py", "test_drive_browser.py"}
+allowed = {"publisher.py", "oauth_setup.py", "client.py", "requirements.txt", "test_publish.py", "drive_browser.py", "drive_client.py", "test_drive_browser.py", "drive_sync.py", "document_sync.py", "document_reader.py"}
 if set(payload["files"]) != allowed: raise SystemExit("FILE_SET_MISMATCH")
 hashes = {}
 for name, encoded in payload["files"].items():

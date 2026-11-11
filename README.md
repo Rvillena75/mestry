@@ -118,6 +118,21 @@ and [source pins](tools/s25-codex-client/source-pins.json).
 | `docs/LOCAL_CONFIGURATION.md` | Public examples versus deployment-specific configuration |
 | `AGENTS.md` | Instructions for continuing work from files and evidence |
 
+## Document synchronization — 8 November 2026
+
+The Termux backend now supports on-demand incremental Drive synchronization,
+a durable SQLite text cache, offline retrieval and retained version history.
+The separate read-only reader is active on S23: 211 local tests and 68 S23
+candidate tests passed. Google consent and both native refresh grants were
+verified. The first real batch discovered 99 items and verified repeated reads
+without downloading again, plus offline retrieval. Initial synchronization is
+still progressing in batches; S25 UI and real human edits remain pending.
+RAG is pending review because expected use in the final product is low.
+
+See [read-only authorization and validation](docs/DOCUMENT_READER_AUTH.md),
+[operation and limits](docs/DOCUMENT_SYNC.md) and the
+[pre-implementation audit](docs/DRIVE_IMPLEMENTATION_AUDIT.md).
+
 ## Current direction
 
 Start with [current project status](STATUS.md), the
